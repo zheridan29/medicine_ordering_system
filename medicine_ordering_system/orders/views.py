@@ -84,9 +84,42 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
             return redirect('home')
         return super().dispatch(request, *args, **kwargs)
     
+    def get_initial(self):
+        """Pre-populate form with cart items and sales rep details"""
+        initial = super().get_initial()
+        
+        # Pre-populate delivery address with sales rep address
+        user = self.request.user
+        initial['delivery_address'] = getattr(user, 'address', '') or ''
+        
+        # Check if user has cart items and pre-populate the form
+        try:
+            cart = Cart.objects.get(sales_rep=self.request.user)
+            cart_items = cart.items.select_related('medicine').all()
+            
+            # Pre-populate medicine fields with cart items
+            for i, item in enumerate(cart_items[:5], 1):  # Limit to 5 items
+                initial[f'medicine_{i}'] = item.medicine
+                initial[f'quantity_{i}'] = item.quantity
+                
+        except Cart.DoesNotExist:
+            pass
+            
+        return initial
+    
     def form_valid(self, form):
         # Set the sales rep
         form.instance.sales_rep = self.request.user
+        
+        # Set customer details from sales rep information (since sales rep is the one ordering)
+        user = self.request.user
+        form.instance.customer_name = user.get_full_name() or user.username
+        form.instance.customer_phone = getattr(user, 'phone', '') or ''
+        form.instance.customer_address = getattr(user, 'address', '') or ''
+        
+        # Set delivery address to sales rep address if not provided
+        if not form.instance.delivery_address:
+            form.instance.delivery_address = getattr(user, 'address', '') or ''
         
         # Calculate totals before saving
         subtotal = Decimal('0.00')
@@ -132,7 +165,14 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
                 total_price=medicine_data['total_price']
             )
         
-        messages.success(self.request, 'Order created successfully!')
+        # Clear the cart after successful order creation
+        try:
+            cart = Cart.objects.get(sales_rep=self.request.user)
+            cart.items.all().delete()
+            messages.success(self.request, 'Sales order created successfully and cart cleared!')
+        except Cart.DoesNotExist:
+            messages.success(self.request, 'Sales order created successfully!')
+        
         return response
 
 

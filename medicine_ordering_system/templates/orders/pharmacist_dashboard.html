@@ -180,7 +180,7 @@
                                             {{ order.get_payment_status_display }}
                                         </span>
                                     </td>
-                                    <td>${{ order.total_amount|floatformat:2 }}</td>
+                                    <td>₱{{ order.total_amount|floatformat:2 }}</td>
                                     <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
                                     <td>
                                         <a href="{% url 'orders:pharmacist_order_detail' order.pk %}" class="btn btn-sm btn-outline-primary">

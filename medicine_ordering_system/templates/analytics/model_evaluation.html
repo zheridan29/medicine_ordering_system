@@ -1,0 +1,525 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Model Evaluation Dashboard - OnCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .metric-label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    
+    .chart-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .performance-badge {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .excellent { background-color: #28a745; }
+    .good { background-color: #17a2b8; }
+    .fair { background-color: #ffc107; color: #212529; }
+    .poor { background-color: #dc3545; }
+    
+    .model-details {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .metric-comparison {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .comparison-item {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .comparison-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #495057;
+    }
+    
+    .comparison-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-chart-line me-2"></i>Model Evaluation Dashboard
+            </h1>
+            <div>
+                <a href="{% url 'analytics:dashboard' %}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Analytics
+                </a>
+                <button class="btn btn-primary" onclick="refreshModelData()">
+                    <i class="fas fa-sync me-1"></i>Refresh Data
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Performance Metrics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value">{{ total_forecasts }}</div>
+            <div class="metric-label">Total Models</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value">{{ avg_mape }}%</div>
+            <div class="metric-label">Avg MAPE</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value">{{ avg_rmse }}</div>
+            <div class="metric-label">Avg RMSE</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value">{{ avg_mae }}</div>
+            <div class="metric-label">Avg MAE</div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Quality Distribution -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-pie-chart me-2"></i>Model Quality Distribution
+            </h5>
+            <div class="row">
+                <div class="col-md-8">
+                    <div style="height: 300px;">
+                        <canvas id="qualityDistributionChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-comparison">
+                        <div class="comparison-item">
+                            <div class="comparison-value excellent">{{ excellent_models }}</div>
+                            <div class="comparison-label">Excellent (<10% MAPE)</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-value good">{{ good_models }}</div>
+                            <div class="comparison-label">Good (10-20% MAPE)</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-value fair">{{ fair_models }}</div>
+                            <div class="comparison-label">Fair (20-30% MAPE)</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-value poor">{{ poor_models }}</div>
+                            <div class="comparison-label">Poor (>30% MAPE)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Performance Metrics Comparison -->
+<div class="row mb-4">
+    <div class="col-lg-6">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-bar me-2"></i>Performance by Period Type
+            </h5>
+            <div style="height: 300px;">
+                <canvas id="periodPerformanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-area me-2"></i>Performance Over Time
+            </h5>
+            <div style="height: 300px;">
+                <canvas id="performanceOverTimeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Model Metrics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-table me-2"></i>Detailed Model Metrics
+            </h5>
+            <div class="metric-comparison">
+                <div class="comparison-item">
+                    <div class="comparison-value">{{ avg_aic }}</div>
+                    <div class="comparison-label">Average AIC</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-value">{{ avg_bic }}</div>
+                    <div class="comparison-label">Average BIC</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-value">{{ avg_rmse }}</div>
+                    <div class="comparison-label">Average RMSE</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-value">{{ avg_mae }}</div>
+                    <div class="comparison-label">Average MAE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top and Worst Performers -->
+<div class="row mb-4">
+    <div class="col-lg-6">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-trophy me-2"></i>Top Performing Models
+            </h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Period</th>
+                            <th>MAPE</th>
+                            <th>Quality</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for forecast in top_performers %}
+                        <tr>
+                            <td>{{ forecast.medicine.name }}</td>
+                            <td>{{ forecast.forecast_period|title }}</td>
+                            <td>{{ forecast.mape|floatformat:2 }}%</td>
+                            <td>
+                                <span class="badge performance-badge {{ forecast.model_quality|lower }}">
+                                    {{ forecast.model_quality }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No forecasts available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-exclamation-triangle me-2"></i>Models Needing Attention
+            </h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Period</th>
+                            <th>MAPE</th>
+                            <th>Quality</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for forecast in worst_performers %}
+                        <tr>
+                            <td>{{ forecast.medicine.name }}</td>
+                            <td>{{ forecast.forecast_period|title }}</td>
+                            <td>{{ forecast.mape|floatformat:2 }}%</td>
+                            <td>
+                                <span class="badge performance-badge {{ forecast.model_quality|lower }}">
+                                    {{ forecast.model_quality }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No forecasts available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Forecasts with Detailed Metrics -->
+<div class="row">
+    <div class="col-12">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-history me-2"></i>Recent Forecasts - Detailed Metrics
+            </h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Period</th>
+                            <th>Created</th>
+                            <th>MAPE</th>
+                            <th>RMSE</th>
+                            <th>MAE</th>
+                            <th>AIC</th>
+                            <th>BIC</th>
+                            <th>Quality</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for forecast in recent_forecasts %}
+                        <tr>
+                            <td>{{ forecast.medicine.name }}</td>
+                            <td>{{ forecast.forecast_period|title }}</td>
+                            <td>{{ forecast.created_at|date:"M d, Y" }}</td>
+                            <td>{{ forecast.mape|floatformat:2 }}%</td>
+                            <td>{{ forecast.rmse|floatformat:2 }}</td>
+                            <td>{{ forecast.mae|floatformat:2 }}</td>
+                            <td>{{ forecast.aic|floatformat:2 }}</td>
+                            <td>{{ forecast.bic|floatformat:2 }}</td>
+                            <td>
+                                <span class="badge performance-badge {{ forecast.model_quality|lower }}">
+                                    {{ forecast.model_quality }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="viewForecastDetails({{ forecast.id }})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">No forecasts available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+$(document).ready(function() {
+    loadQualityDistributionChart();
+    loadPeriodPerformanceChart();
+    loadPerformanceOverTimeChart();
+});
+
+function loadQualityDistributionChart() {
+    const ctx = document.getElementById('qualityDistributionChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Excellent', 'Good', 'Fair', 'Poor'],
+            datasets: [{
+                data: [{{ excellent_models }}, {{ good_models }}, {{ fair_models }}, {{ poor_models }}],
+                backgroundColor: [
+                    '#28a745',
+                    '#17a2b8',
+                    '#ffc107',
+                    '#dc3545'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                title: {
+                    display: true,
+                    text: 'Model Quality Distribution'
+                }
+            }
+        }
+    });
+}
+
+function loadPeriodPerformanceChart() {
+    const ctx = document.getElementById('periodPerformanceChart').getContext('2d');
+    
+    const periodData = {{ period_performance|safe }};
+    const periods = Object.keys(periodData);
+    const mapeData = periods.map(period => periodData[period].avg_mape);
+    const rmseData = periods.map(period => periodData[period].avg_rmse);
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: periods.map(period => period.charAt(0).toUpperCase() + period.slice(1)),
+            datasets: [{
+                label: 'Average MAPE (%)',
+                data: mapeData,
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Average RMSE',
+                data: rmseData,
+                backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Value'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Performance by Period Type'
+                }
+            }
+        }
+    });
+}
+
+function loadPerformanceOverTimeChart() {
+    const ctx = document.getElementById('performanceOverTimeChart').getContext('2d');
+    
+    const dailyData = {{ daily_performance|safe }};
+    const dates = Object.keys(dailyData).sort();
+    const mapeValues = dates.map(date => dailyData[date].avg_mape);
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates.map(date => new Date(date).toLocaleDateString()),
+            datasets: [{
+                label: 'Average MAPE (%)',
+                data: mapeValues,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'MAPE (%)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Model Performance Over Time'
+                }
+            }
+        }
+    });
+}
+
+function viewForecastDetails(forecastId) {
+    // Implementation for viewing detailed forecast information
+    showAlert('info', `Viewing details for forecast ${forecastId} - Feature coming soon!`);
+}
+
+function refreshModelData() {
+    // Reload the page to refresh all data
+    location.reload();
+}
+
+function showAlert(type, message) {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    // Remove existing alerts
+    $('.alert').remove();
+    
+    // Add new alert
+    $('.row:first').before(alertHtml);
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(function() {
+        $('.alert').fadeOut();
+    }, 5000);
+}
+</script>
+{% endblock %}

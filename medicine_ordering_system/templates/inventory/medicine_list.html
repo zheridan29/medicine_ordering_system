@@ -14,9 +14,15 @@
                         <i class="fas fa-plus me-1"></i>Add Medicine
                     </a>
                 {% endif %}
-                <a href="{% url 'inventory:dashboard' %}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
-                </a>
+                {% if user.is_admin or user.is_pharmacist_admin %}
+                    <a href="{% url 'inventory:dashboard' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                    </a>
+                {% else %}
+                    <a href="{% url 'orders:dashboard' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -91,7 +97,7 @@
                         <div class="row mb-3">
                             <div class="col-6">
                                 <small class="text-muted">Price:</small><br>
-                                <strong>${{ medicine.unit_price|floatformat:2 }}</strong>
+                                <strong>₱{{ medicine.unit_price|floatformat:2 }}</strong>
                             </div>
                             <div class="col-6">
                                 <small class="text-muted">Stock:</small><br>
@@ -216,6 +222,9 @@ $(document).ready(function() {
                 // Show success message
                 showAlert('success', 'Item added to cart successfully!');
                 
+                // Update cart count in real-time
+                updateCartCount();
+                
                 // Reset form
                 form.find('input[name="quantity"]').val(1);
             } else {
@@ -232,6 +241,18 @@ $(document).ready(function() {
             button.html('<i class="fas fa-cart-plus me-1"></i>Add to Cart');
         });
     });
+    
+    // Function to update cart count
+    function updateCartCount() {
+        fetch('/orders/api/cart/')
+            .then(response => response.json())
+            .then(data => {
+                $('#cart-count').text(data.total_items || 0);
+            })
+            .catch(error => {
+                console.error('Error updating cart count:', error);
+            });
+    }
     
     // Function to show alerts
     function showAlert(type, message) {

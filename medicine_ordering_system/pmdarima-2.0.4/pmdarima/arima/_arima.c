@@ -4,16 +4,16 @@
 {
     "distutils": {
         "depends": [
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\arrayobject.h",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\arrayscalars.h",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarrayobject.h",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\arrayobject.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\arrayscalars.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarrayobject.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h",
             "pmdarima\\arima\\_arima_fast_helpers.h"
         ],
         "include_dirs": [
             "pmdarima/arima",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include"
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include"
         ],
         "name": "pmdarima.arima._arima",
         "sources": [

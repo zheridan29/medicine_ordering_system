@@ -4319,3 +4319,567 @@ Forbidden: /orders/api/cart/
 "GET /orders/cart/ HTTP/1.1" 200 17863
 "GET /common/api/notifications/ HTTP/1.1" 200 21
 "GET /orders/api/cart/ HTTP/1.1" 200 281
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /accounts/login/?next=/ HTTP/1.1" 200 7916
+"GET /static/css/custom.css HTTP/1.1" 200 7627
+"GET /static/js/common.js HTTP/1.1" 200 12581
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3941
+"POST /accounts/login/?next=/ HTTP/1.1" 302 0
+"GET /oncare-admin/ HTTP/1.1" 200 14512
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /accounts/logout/confirm/ HTTP/1.1" 200 9057
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /accounts/login/?next=/ HTTP/1.1" 200 8817
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/ HTTP/1.1" 302 0
+"GET /orders/ HTTP/1.1" 200 14353
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 281
+"GET /accounts/logout/confirm/ HTTP/1.1" 200 8285
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 281
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /accounts/login/?next=/ HTTP/1.1" 200 8817
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/ HTTP/1.1" 302 0
+"GET /inventory/ HTTP/1.1" 200 12673
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Watching for file changes with StatReloader
+"GET /accounts/logout/confirm/ HTTP/1.1" 200 9110
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /accounts/login/?next=/ HTTP/1.1" 200 8817
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/ HTTP/1.1" 302 0
+"GET /orders/ HTTP/1.1" 200 14353
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 281
+"GET / HTTP/1.1" 302 0
+"GET /accounts/login/?next=/ HTTP/1.1" 200 7916
+"GET /static/css/custom.css HTTP/1.1" 200 7627
+"GET /static/js/common.js HTTP/1.1" 200 12581
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3941
+"POST /accounts/login/?next=/ HTTP/1.1" 302 0
+"GET /inventory/ HTTP/1.1" 200 12673
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 20792
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /inventory/ HTTP/1.1" 200 12673
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/ HTTP/1.1" 200 12127
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 281
+"GET /orders/ HTTP/1.1" 200 14353
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 281
+"GET /orders/cart/ HTTP/1.1" 200 17863
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 281
+"GET /orders/orders/create/ HTTP/1.1" 200 27548
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 281
+"GET /inventory/api/medicines/5/ HTTP/1.1" 200 469
+"GET /inventory/api/medicines/5/ HTTP/1.1" 200 469
+"GET /inventory/api/medicines/1/ HTTP/1.1" 200 431
+"GET /inventory/api/medicines/1/ HTTP/1.1" 200 431
+"POST /orders/orders/create/ HTTP/1.1" 302 0
+"GET /orders/orders/ HTTP/1.1" 200 14072
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/pharmacist/dashboard/ HTTP/1.1" 200 22001
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/4/status/ HTTP/1.1" 200 12300
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /orders/orders/4/status/ HTTP/1.1" 302 0
+"GET /orders/pharmacist/orders/4/ HTTP/1.1" 200 13092
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 22794
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/4/status/ HTTP/1.1" 200 12297
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /orders/orders/4/status/ HTTP/1.1" 302 0
+"GET /orders/pharmacist/orders/4/ HTTP/1.1" 200 13087
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 22789
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/5/status/ HTTP/1.1" 200 12294
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /orders/orders/5/status/ HTTP/1.1" 302 0
+"GET /orders/pharmacist/orders/5/ HTTP/1.1" 200 13804
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 22788
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/dashboard/ HTTP/1.1" 200 21992
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /inventory/ HTTP/1.1" 200 12673
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/ HTTP/1.1" 200 15198
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/ HTTP/1.1" 200 15198
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/cart/ HTTP/1.1" 200 9413
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/orders/ HTTP/1.1" 200 13072
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/cart/ HTTP/1.1" 200 9413
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /inventory/medicines/ HTTP/1.1" 200 22903
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"POST /orders/api/cart/add/ HTTP/1.1" 200 45
+"POST /orders/api/cart/add/ HTTP/1.1" 200 45
+"POST /orders/api/cart/add/ HTTP/1.1" 200 45
+"POST /orders/api/cart/add/ HTTP/1.1" 200 45
+"GET /orders/cart/ HTTP/1.1" 200 15425
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+"GET /orders/orders/create/ HTTP/1.1" 200 27538
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /inventory/api/medicines/1/ HTTP/1.1" 200 431
+"GET /inventory/api/medicines/1/ HTTP/1.1" 200 431
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+"GET /orders/ HTTP/1.1" 200 15198
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+"GET /orders/cart/ HTTP/1.1" 200 15425
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+"GET /orders/orders/ HTTP/1.1" 200 13072
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+"GET /inventory/medicines/ HTTP/1.1" 200 22903
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+"POST /orders/api/cart/add/ HTTP/1.1" 200 45
+"POST /orders/api/cart/add/ HTTP/1.1" 200 45
+"POST /orders/api/cart/add/ HTTP/1.1" 200 45
+"GET /orders/cart/ HTTP/1.1" 200 15426
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /orders/cart/ HTTP/1.1" 200 15426
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+"GET /orders/cart/clear/ HTTP/1.1" 200 7604
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 158
+"POST /orders/cart/clear/ HTTP/1.1" 302 0
+"GET /orders/cart/ HTTP/1.1" 200 9847
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/ HTTP/1.1" 200 15198
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /analytics/ HTTP/1.1" 200 20792
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 26211
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+"GET /orders/ HTTP/1.1" 200 15210
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /analytics/ HTTP/1.1" 200 26211
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET / HTTP/1.1" 200 12837
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET / HTTP/1.1" 302 0
+"GET /accounts/login/?next=/ HTTP/1.1" 200 7916
+"GET /static/css/custom.css HTTP/1.1" 200 7627
+"GET /static/js/common.js HTTP/1.1" 200 12581
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3941
+"POST /accounts/login/?next=/ HTTP/1.1" 302 0
+"GET /oncare-admin/ HTTP/1.1" 200 14514
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 26165
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+"GET /orders/orders/ HTTP/1.1" 200 13082
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/ HTTP/1.1" 200 15210
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 32793
+"GET /static/js/common.js HTTP/1.1" 304 0
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+Not Found: /analytics/api/inventory-optimization/1/
+"GET /analytics/api/inventory-optimization/1/ HTTP/1.1" 404 42
+"GET /analytics/api/sales-trends/1/ HTTP/1.1" 200 82
+Not Found: /analytics/api/inventory-optimization/3/
+"GET /analytics/api/inventory-optimization/3/ HTTP/1.1" 404 42
+"GET /analytics/api/sales-trends/3/ HTTP/1.1" 200 82
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 61
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 36295
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+Not Found: /analytics/api/inventory-optimization/1/
+"GET /analytics/api/inventory-optimization/1/ HTTP/1.1" 404 42
+"GET /analytics/api/sales-trends/1/ HTTP/1.1" 200 82
+"GET /analytics/api/sales-trends/5/ HTTP/1.1" 200 82
+Not Found: /analytics/api/inventory-optimization/5/
+"GET /analytics/api/inventory-optimization/5/ HTTP/1.1" 404 42
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 36322
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+Internal Server Error: /oncare-admin/reports/
+Traceback (most recent call last):
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: oncare_admin/report_list.html, oncare_admin/adminreport_list.html
+"GET /oncare-admin/reports/ HTTP/1.1" 500 92587
+Watching for file changes with StatReloader
+"GET /oncare-admin/ HTTP/1.1" 200 14514
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/ HTTP/1.1" 200 36523
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+Internal Server Error: /oncare-admin/reports/
+Traceback (most recent call last):
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: oncare_admin/report_list.html, oncare_admin/adminreport_list.html
+"GET /oncare-admin/reports/ HTTP/1.1" 500 92587
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 20570
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21

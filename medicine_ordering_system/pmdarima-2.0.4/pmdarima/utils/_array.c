@@ -4,14 +4,14 @@
 {
     "distutils": {
         "depends": [
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\arrayobject.h",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\arrayscalars.h",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarrayobject.h",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h"
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\arrayobject.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\arrayscalars.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarrayobject.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h"
         ],
         "include_dirs": [
-            "C:\\Users\\Ace Z Gutierrez\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include"
+            "C:\\Users\\Ace Gutierrez\\Documents\\System2025\\medicine_ordering_system\\medicine_ordering_system\\venv\\Lib\\site-packages\\numpy\\_core\\include"
         ],
         "name": "pmdarima.utils._array",
         "sources": [

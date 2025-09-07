@@ -1,0 +1,21 @@
+winget install Microsoft.VisualStudio.2022.BuildTools
+
+
+https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+Install this visual studio build tools first
+
+install the requirements of pmdarima from website 
+https://pypi.org/project/pmdarima/
+
+download version 
+pmdarima-2.0.4.tar.gz
+extract
+then, install requirements (before isntall make sure, build tools is installed)
+
+    pip freeze > requirements.txt
+
+
+THE LIMIT OF THE SYSTEM
+
+ordering system only, payments is handled manually between sales rep and the company (customer and company through the sales rep)

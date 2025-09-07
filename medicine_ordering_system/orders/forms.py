@@ -90,11 +90,8 @@ class OrderWithItemsForm(forms.ModelForm):
     
     class Meta:
         model = Order
-        fields = ['customer_name', 'customer_phone', 'customer_address', 'delivery_method', 'delivery_address', 'delivery_instructions', 'payment_status', 'customer_notes']
+        fields = ['delivery_method', 'delivery_address', 'delivery_instructions', 'payment_status', 'customer_notes']
         widgets = {
-            'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'customer_phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'customer_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'delivery_method': forms.Select(attrs={'class': 'form-select'}),
             'delivery_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'delivery_instructions': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),

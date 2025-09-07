@@ -108,7 +108,7 @@
             <div class="card-body">
                 <p><strong>Customer:</strong> {{ object.customer_name }}</p>
                 <p><strong>Phone:</strong> {{ object.customer_phone }}</p>
-                <p><strong>Total Amount:</strong> ${{ object.total_amount|floatformat:2 }}</p>
+                <p><strong>Total Amount:</strong> ₱{{ object.total_amount|floatformat:2 }}</p>
                 <p><strong>Delivery Method:</strong> {{ object.get_delivery_method_display }}</p>
                 <p><strong>Created:</strong> {{ object.created_at|date:"M d, Y H:i" }}</p>
                 {% if object.sales_rep %}

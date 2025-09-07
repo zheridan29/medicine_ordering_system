@@ -39,12 +39,35 @@ def generate_forecast(request):
         
         # Generate forecast
         forecasting_service = ARIMAForecastingService()
-        forecast = forecasting_service.generate_forecast(
-            medicine_id, forecast_period, forecast_horizon
-        )
         
-        # Generate inventory optimization
-        optimization = forecasting_service.optimize_inventory_levels(forecast)
+        try:
+            forecast = forecasting_service.generate_forecast(
+                medicine_id, forecast_period, forecast_horizon
+            )
+            
+            # Generate inventory optimization
+            optimization = forecasting_service.optimize_inventory_levels(forecast)
+            
+        except ValueError as e:
+            if "Insufficient data points" in str(e):
+                # Get medicine name for better error message
+                try:
+                    medicine = Medicine.objects.get(id=medicine_id)
+                    medicine_name = medicine.name
+                except Medicine.DoesNotExist:
+                    medicine_name = f"Medicine ID {medicine_id}"
+                
+                error_response = {
+                    'error': 'insufficient_data',
+                    'message': f'Insufficient sales data for {medicine_name}. Need at least 30 data points for accurate forecasting.',
+                    'medicine_name': medicine_name,
+                    'required_data_points': 30,
+                    'suggestion': 'Please ensure the medicine has sufficient sales history before generating forecasts.'
+                }
+                
+                return Response(error_response, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                raise e
         
         return Response({
             'forecast_id': forecast.id,
@@ -62,6 +85,9 @@ def generate_forecast(request):
                 'optimal_reorder_point': optimization.optimal_reorder_point,
                 'optimal_order_quantity': optimization.optimal_order_quantity,
                 'safety_stock': optimization.safety_stock,
+                'expected_holding_cost': optimization.expected_holding_cost,
+                'expected_stockout_cost': optimization.expected_stockout_cost,
+                'total_expected_cost': optimization.total_expected_cost
             }
         })
         
@@ -358,3 +384,358 @@ def get_reorder_alerts(request):
             {'error': str(e)}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_forecasts(request):
+    """
+    Get list of existing forecasts for extension
+    """
+    try:
+        # Check permissions
+        if not (request.user.is_admin or request.user.is_pharmacist_admin):
+            return Response(
+                {'error': 'Permission denied'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get recent forecasts
+        forecasts = DemandForecast.objects.select_related('medicine').order_by('-created_at')[:20]
+        
+        forecast_data = []
+        for forecast in forecasts:
+            forecast_data.append({
+                'id': forecast.id,
+                'medicine_name': forecast.medicine.name,
+                'forecast_period': forecast.forecast_period,
+                'forecast_horizon': forecast.forecast_horizon,
+                'created_at': forecast.created_at.isoformat(),
+                'accuracy': forecast.mape if forecast.mape else 0
+            })
+        
+        return Response({'forecasts': forecast_data})
+        
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def extend_forecast(request):
+    """
+    Extend an existing forecast with additional periods
+    """
+    try:
+        data = request.data
+        forecast_id = data.get('forecast_id')
+        extend_horizon = data.get('extend_horizon')
+        extend_period = data.get('extend_period')
+        
+        if not all([forecast_id, extend_horizon, extend_period]):
+            return Response(
+                {'error': 'forecast_id, extend_horizon, and extend_period are required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check permissions
+        if not (request.user.is_admin or request.user.is_pharmacist_admin):
+            return Response(
+                {'error': 'Permission denied'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Validate horizon limits
+        max_limits = {
+            'daily': 30,
+            'weekly': 52,
+            'monthly': 24
+        }
+        
+        if int(extend_horizon) > max_limits.get(extend_period, 12):
+            return Response(
+                {'error': f'Maximum extension for {extend_period} forecasts is {max_limits[extend_period]} periods'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Get the existing forecast
+        try:
+            existing_forecast = DemandForecast.objects.get(id=forecast_id)
+        except DemandForecast.DoesNotExist:
+            return Response(
+                {'error': 'Forecast not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Generate extended forecast
+        forecasting_service = ARIMAForecastingService()
+        
+        # Calculate new horizon (existing + extension)
+        new_horizon = existing_forecast.forecast_horizon + int(extend_horizon)
+        
+        try:
+            # Generate new forecast with extended horizon
+            extended_forecast = forecasting_service.generate_forecast(
+                existing_forecast.medicine.id,
+                extend_period,
+                new_horizon
+            )
+            
+            # Update inventory optimization for the extended forecast
+            optimization = forecasting_service.optimize_inventory_levels(extended_forecast)
+            
+        except ValueError as e:
+            if "Insufficient data points" in str(e):
+                return Response({
+                    'error': 'insufficient_data',
+                    'message': f'Insufficient sales data for {existing_forecast.medicine.name}. Need at least 30 data points for accurate forecasting.',
+                    'medicine_name': existing_forecast.medicine.name,
+                    'required_data_points': 30,
+                    'suggestion': 'Please ensure the medicine has sufficient sales history before extending forecasts.'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                raise e
+        
+        return Response({
+            'forecast_id': extended_forecast.id,
+            'new_horizon': new_horizon,
+            'extended_periods': extend_horizon,
+            'message': f'Forecast extended successfully by {extend_horizon} {extend_period} periods'
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_model_evaluation_data(request):
+    """
+    Get comprehensive model evaluation data for the model evaluation dashboard
+    """
+    try:
+        # Check permissions
+        if not (request.user.is_admin or request.user.is_pharmacist_admin):
+            return Response(
+                {'error': 'Permission denied'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get all forecasts with their metrics
+        forecasts = DemandForecast.objects.filter(is_active=True).order_by('-created_at')
+        
+        # Calculate aggregate metrics
+        aggregate_metrics = _calculate_aggregate_metrics(forecasts)
+        
+        # Get model performance distribution
+        performance_distribution = _get_model_performance_distribution(forecasts)
+        
+        # Get medicine-specific performance
+        medicine_performance = _get_medicine_performance(forecasts)
+        
+        # Get recent forecasts for detailed view
+        recent_forecasts = []
+        for forecast in forecasts[:20]:
+            recent_forecasts.append({
+                'id': forecast.id,
+                'medicine_name': forecast.medicine.name,
+                'forecast_period': forecast.forecast_period,
+                'created_at': forecast.created_at.isoformat(),
+                'mape': forecast.mape,
+                'rmse': forecast.rmse,
+                'mae': forecast.mae,
+                'aic': forecast.aic,
+                'bic': forecast.bic,
+                'model_quality': forecast.model_quality,
+                'arima_params': f"({forecast.arima_p},{forecast.arima_d},{forecast.arima_q})",
+                'training_data_points': forecast.training_data_points,
+            })
+        
+        return Response({
+            'aggregate_metrics': aggregate_metrics,
+            'performance_distribution': performance_distribution,
+            'medicine_performance': medicine_performance,
+            'recent_forecasts': recent_forecasts,
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_forecast_details(request, forecast_id):
+    """
+    Get detailed information about a specific forecast
+    """
+    try:
+        # Check permissions
+        if not (request.user.is_admin or request.user.is_pharmacist_admin):
+            return Response(
+                {'error': 'Permission denied'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get the forecast
+        try:
+            forecast = DemandForecast.objects.get(id=forecast_id)
+        except DemandForecast.DoesNotExist:
+            return Response(
+                {'error': 'Forecast not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Get related optimization data
+        optimization = InventoryOptimization.objects.filter(
+            demand_forecast=forecast
+        ).first()
+        
+        forecast_data = {
+            'id': forecast.id,
+            'medicine_name': forecast.medicine.name,
+            'medicine_id': forecast.medicine.id,
+            'forecast_period': forecast.forecast_period,
+            'forecast_horizon': forecast.forecast_horizon,
+            'created_at': forecast.created_at.isoformat(),
+            'arima_params': {
+                'p': forecast.arima_p,
+                'd': forecast.arima_d,
+                'q': forecast.arima_q,
+            },
+            'model_metrics': {
+                'aic': forecast.aic,
+                'bic': forecast.bic,
+                'rmse': forecast.rmse,
+                'mae': forecast.mae,
+                'mape': forecast.mape,
+            },
+            'model_quality': forecast.model_quality,
+            'forecasted_demand': forecast.forecasted_demand,
+            'confidence_intervals': forecast.confidence_intervals,
+            'training_data': {
+                'start_date': forecast.training_data_start.isoformat(),
+                'end_date': forecast.training_data_end.isoformat(),
+                'data_points': forecast.training_data_points,
+            },
+            'optimization': None,
+        }
+        
+        if optimization:
+            forecast_data['optimization'] = {
+                'service_level': float(optimization.service_level),
+                'lead_time_days': optimization.lead_time_days,
+                'holding_cost_percentage': float(optimization.holding_cost_percentage),
+                'optimal_reorder_point': optimization.optimal_reorder_point,
+                'optimal_order_quantity': optimization.optimal_order_quantity,
+                'optimal_maximum_stock': optimization.optimal_maximum_stock,
+                'safety_stock': optimization.safety_stock,
+                'expected_holding_cost': float(optimization.expected_holding_cost),
+                'expected_stockout_cost': float(optimization.expected_stockout_cost),
+                'total_expected_cost': float(optimization.total_expected_cost),
+            }
+        
+        return Response(forecast_data)
+        
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+def _calculate_aggregate_metrics(forecasts):
+    """Helper function to calculate aggregate model performance metrics"""
+    if not forecasts.exists():
+        return {
+            'total_forecasts': 0,
+            'avg_mape': 0,
+            'avg_rmse': 0,
+            'avg_mae': 0,
+            'avg_aic': 0,
+            'avg_bic': 0,
+            'excellent_models': 0,
+            'good_models': 0,
+            'fair_models': 0,
+            'poor_models': 0,
+        }
+    
+    # Calculate averages
+    avg_mape = forecasts.aggregate(avg=models.Avg('mape'))['avg'] or 0
+    avg_rmse = forecasts.aggregate(avg=models.Avg('rmse'))['avg'] or 0
+    avg_mae = forecasts.aggregate(avg=models.Avg('mae'))['avg'] or 0
+    avg_aic = forecasts.aggregate(avg=models.Avg('aic'))['avg'] or 0
+    avg_bic = forecasts.aggregate(avg=models.Avg('bic'))['avg'] or 0
+    
+    # Count by quality
+    excellent_models = forecasts.filter(mape__lt=10).count()
+    good_models = forecasts.filter(mape__gte=10, mape__lt=20).count()
+    fair_models = forecasts.filter(mape__gte=20, mape__lt=30).count()
+    poor_models = forecasts.filter(mape__gte=30).count()
+    
+    return {
+        'total_forecasts': forecasts.count(),
+        'avg_mape': round(avg_mape, 2),
+        'avg_rmse': round(avg_rmse, 2),
+        'avg_mae': round(avg_mae, 2),
+        'avg_aic': round(avg_aic, 2),
+        'avg_bic': round(avg_bic, 2),
+        'excellent_models': excellent_models,
+        'good_models': good_models,
+        'fair_models': fair_models,
+        'poor_models': poor_models,
+    }
+
+
+def _get_model_performance_distribution(forecasts):
+    """Helper function to get model performance distribution data"""
+    # Performance by period type
+    period_performance = {}
+    for period in ['daily', 'weekly', 'monthly']:
+        period_forecasts = forecasts.filter(forecast_period=period)
+        if period_forecasts.exists():
+            period_performance[period] = {
+                'count': period_forecasts.count(),
+                'avg_mape': round(period_forecasts.aggregate(avg=models.Avg('mape'))['avg'] or 0, 2),
+                'avg_rmse': round(period_forecasts.aggregate(avg=models.Avg('rmse'))['avg'] or 0, 2),
+            }
+    
+    return {
+        'period_performance': period_performance,
+    }
+
+
+def _get_medicine_performance(forecasts):
+    """Helper function to get medicine-specific performance metrics"""
+    # Top performing medicines (lowest MAPE)
+    top_performers = []
+    for forecast in forecasts.order_by('mape')[:10]:
+        top_performers.append({
+            'medicine_name': forecast.medicine.name,
+            'forecast_period': forecast.forecast_period,
+            'mape': forecast.mape,
+            'model_quality': forecast.model_quality,
+        })
+    
+    # Worst performing medicines (highest MAPE)
+    worst_performers = []
+    for forecast in forecasts.order_by('-mape')[:10]:
+        worst_performers.append({
+            'medicine_name': forecast.medicine.name,
+            'forecast_period': forecast.forecast_period,
+            'mape': forecast.mape,
+            'model_quality': forecast.model_quality,
+        })
+    
+    return {
+        'top_performers': top_performers,
+        'worst_performers': worst_performers,
+    }

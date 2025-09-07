@@ -1,0 +1,28 @@
+Backup Existing Data:
+Stop Apache and MariaDB (MySQL) services in the XAMPP Control Panel.
+Navigate to your XAMPP installation directory (e.g., C:\xampp).
+Rename the mysql folder to mysql_old (or any other name to signify it's the old version).
+Create a backup of your databases by copying the data folder from mysql_old to a safe location.
+Download New MariaDB Version:
+Visit the official MariaDB website and download the desired stable version of MariaDB for Windows (ZIP archive, not the installer). Ensure you select the correct architecture (32-bit or 64-bit) for your system.
+Integrate New MariaDB:
+Extract the contents of the downloaded MariaDB ZIP file into your XAMPP directory. 
+Rename the extracted MariaDB folder (e.g., mariadb-11.x.x-winx64) to mysql. This new mysql folder will now house the updated MariaDB.
+Migrate Configuration and Data:
+Copy the my.ini file from xampp\mysql_old\bin to xampp\mysql\bin. 
+Copy the backup and scripts folders from xampp\mysql_old to xampp\mysql. 
+Copy the data folder (containing your databases) from xampp\mysql_old to xampp\mysql. If the new MariaDB version has a different data directory structure, you might need to copy individual database folders from mysql_old\data to mysql\data. 
+Configure and Upgrade:
+Open xampp\mysql\bin\my.ini in a text editor. 
+Review and adjust any necessary configurations, such as port numbers or data directory paths, to match your environment and the new MariaDB version's requirements.
+Start Apache and MariaDB (MySQL) from the XAMPP Control Panel.
+Open a command prompt as administrator and navigate to xampp\mysql\bin.
+Run the MariaDB upgrade utility:
+Code
+
+        mysql_upgrade.exe
+This command will upgrade the database tables to be compatible with the new MariaDB version.
+Verify and Finalize:
+Restart Apache and MariaDB (MySQL) in the XAMPP Control Panel.
+Verify the updated MariaDB version through phpMyAdmin or by running mysql -V in the command prompt.
+Confirm that your applications and databases are functioning correctly with the new MariaDB version.

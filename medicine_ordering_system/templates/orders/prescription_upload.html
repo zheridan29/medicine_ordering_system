@@ -90,7 +90,7 @@
                 <p><strong>Order Date:</strong> {{ object.created_at|date:"M d, Y" }}</p>
                 <p><strong>Customer:</strong> {{ object.customer_name }}</p>
                 <p><strong>Phone:</strong> {{ object.customer_phone }}</p>
-                <p><strong>Total:</strong> ${{ object.total_amount|floatformat:2 }}</p>
+                <p><strong>Total:</strong> ₱{{ object.total_amount|floatformat:2 }}</p>
                 
                 <hr>
                 

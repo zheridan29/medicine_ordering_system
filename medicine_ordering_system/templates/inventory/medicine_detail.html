@@ -42,7 +42,7 @@
                 
                 <div class="row text-center">
                     <div class="col-6">
-                        <h4 class="text-primary">${{ medicine.unit_price|floatformat:2 }}</h4>
+                        <h4 class="text-primary">₱{{ medicine.unit_price|floatformat:2 }}</h4>
                         <small class="text-muted">Unit Price</small>
                     </div>
                     <div class="col-6">
@@ -95,7 +95,7 @@
                         <table class="table table-borderless">
                             <tr>
                                 <td><strong>Cost Price:</strong></td>
-                                <td>${{ medicine.cost_price|floatformat:2 }}</td>
+                                <td>₱{{ medicine.cost_price|floatformat:2 }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Current Stock:</strong></td>
