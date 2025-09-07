@@ -7,6 +7,7 @@ import numpy as np
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 import logging
+from decimal import Decimal
 
 from pmdarima import auto_arima
 from statsmodels.tsa.stattools import acf, pacf
@@ -14,7 +15,7 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import warnings
 
-from django.db.models import Sum, Count, Q
+from django.db.models import Sum, Count, Q, F
 from django.utils import timezone
 
 from .models import DemandForecast, InventoryOptimization, SalesTrend
@@ -250,27 +251,27 @@ class ARIMAForecastingService:
             # D = annual demand, S = ordering cost, H = holding cost per unit per year
             
             annual_demand = np.sum(forecasted_demand) * (52 / len(forecasted_demand))  # annualize
-            ordering_cost = 50.0  # assumed ordering cost
-            holding_cost_per_unit = forecast.medicine.unit_price * (holding_cost_percentage / 100)
+            ordering_cost = Decimal('50.0')  # assumed ordering cost
+            holding_cost_per_unit = forecast.medicine.unit_price * Decimal(str(holding_cost_percentage / 100))
             
-            eoq = np.sqrt(2 * annual_demand * ordering_cost / holding_cost_per_unit)
+            eoq = np.sqrt(2 * annual_demand * float(ordering_cost) / float(holding_cost_per_unit))
             optimal_order_quantity = int(eoq)
             
             # Calculate maximum stock level
             optimal_maximum_stock = reorder_point + optimal_order_quantity
             
             # Calculate expected costs
-            expected_holding_cost = (optimal_order_quantity / 2) * holding_cost_per_unit
-            expected_stockout_cost = (1 - service_level / 100) * annual_demand * forecast.medicine.unit_price * 0.1  # 10% of unit price as stockout cost
+            expected_holding_cost = Decimal(str(optimal_order_quantity / 2)) * holding_cost_per_unit
+            expected_stockout_cost = Decimal(str((1 - service_level / 100) * annual_demand)) * forecast.medicine.unit_price * Decimal('0.1')  # 10% of unit price as stockout cost
             total_expected_cost = expected_holding_cost + expected_stockout_cost
             
             # Create InventoryOptimization object
             optimization = InventoryOptimization.objects.create(
                 medicine=forecast.medicine,
                 demand_forecast=forecast,
-                service_level=service_level,
+                service_level=Decimal(str(service_level)),
                 lead_time_days=lead_time_days,
-                holding_cost_percentage=holding_cost_percentage,
+                holding_cost_percentage=Decimal(str(holding_cost_percentage)),
                 optimal_reorder_point=int(reorder_point),
                 optimal_order_quantity=optimal_order_quantity,
                 optimal_maximum_stock=optimal_maximum_stock,
@@ -413,7 +414,7 @@ class SupplyChainOptimizer:
         
         # Get all medicines with low stock
         low_stock_medicines = Medicine.objects.filter(
-            current_stock__lte=models.F('reorder_point'),
+            current_stock__lte=F('reorder_point'),
             is_active=True
         )
         
