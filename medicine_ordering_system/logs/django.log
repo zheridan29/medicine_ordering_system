@@ -4883,3 +4883,63 @@ Not Found: /analytics/api/inventory-optimization/4/
 Forbidden: /orders/api/cart/
 "GET /orders/api/cart/ HTTP/1.1" 403 67
 "GET /common/api/notifications/ HTTP/1.1" 200 21
+Watching for file changes with StatReloader
+"GET /inventory/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/inventory/ HTTP/1.1" 200 7916
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/inventory/ HTTP/1.1" 302 0
+"GET /inventory/ HTTP/1.1" 200 12673
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 36569
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1215
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 305
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 36569
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1439
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1439
+Not Found: /analytics/api/inventory-optimization/6/
+"GET /analytics/api/sales-trends/6/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/6/ HTTP/1.1" 404 42
+Not Found: /analytics/api/inventory-optimization/3/
+"GET /analytics/api/sales-trends/3/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/3/ HTTP/1.1" 404 42
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Not Found: /analytics/api/inventory-optimization/6/
+"GET /analytics/api/inventory-optimization/6/ HTTP/1.1" 404 42
+"GET /analytics/api/sales-trends/6/ HTTP/1.1" 200 82
+Not Found: /analytics/api/inventory-optimization/3/
+"GET /analytics/api/sales-trends/3/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/3/ HTTP/1.1" 404 42
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 20616
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
