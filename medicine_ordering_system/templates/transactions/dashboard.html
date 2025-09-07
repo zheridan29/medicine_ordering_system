@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Transactions Dashboard - OnCare{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-credit-card me-2"></i>Transactions Dashboard</h1>
+            <div>
+                <a href="{% url 'transactions:transaction_list' %}" class="btn btn-primary">
+                    <i class="fas fa-list me-1"></i>View All Transactions
+                </a>
+                <a href="{% url 'transactions:report_sales' %}" class="btn btn-outline-info">
+                    <i class="fas fa-chart-bar me-1"></i>Sales Report
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ total_transactions|default:0 }}</h4>
+                        <p class="card-text">Total Transactions</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-credit-card fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">${{ total_revenue|default:0|floatformat:2 }}</h4>
+                        <p class="card-text">Total Revenue</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-dollar-sign fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">${{ today_revenue|default:0|floatformat:2 }}</h4>
+                        <p class="card-text">Today's Revenue</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-calendar-day fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ pending_refunds|default:0 }}</h4>
+                        <p class="card-text">Pending Refunds</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-undo fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Transactions -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-history me-2"></i>Recent Transactions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-3">
+                    <p class="text-muted">Recent transactions will appear here</p>
+                    <a href="{% url 'transactions:transaction_list' %}" class="btn btn-primary">
+                        <i class="fas fa-list me-1"></i>View All Transactions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>Payment Methods
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-3">
+                    <p class="text-muted">Payment method distribution will appear here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'transactions:transaction_list' %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-list me-2"></i>All Transactions
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'transactions:payment_method_list' %}" class="btn btn-outline-success w-100">
+                            <i class="fas fa-credit-card me-2"></i>Payment Methods
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'transactions:report_sales' %}" class="btn btn-outline-info w-100">
+                            <i class="fas fa-chart-bar me-2"></i>Sales Report
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'transactions:report_financial' %}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-chart-line me-2"></i>Financial Report
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'transactions:refund_create' 0 %}" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-undo me-2"></i>Process Refund
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'analytics:dashboard' %}" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-chart-pie me-2"></i>Analytics
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

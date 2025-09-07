@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Update Order Status - OnCare{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-edit me-2"></i>
+                Update Order Status
+            </h1>
+            <a href="{% url 'orders:pharmacist_order_detail' object.pk %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Order
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-shopping-cart me-2"></i>Order #{{ object.order_number }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.status.id_for_label }}" class="form-label">Order Status *</label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.status.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    Current status: <span class="badge bg-{% if object.status == 'pending' %}warning{% elif object.status == 'processing' %}info{% elif object.status == 'ready_for_pickup' %}success{% elif object.status == 'delivered' %}dark{% elif object.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
+                                        {{ object.get_status_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.payment_status.id_for_label }}" class="form-label">Payment Status *</label>
+                                {{ form.payment_status }}
+                                {% if form.payment_status.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.payment_status.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    Current payment status: <span class="badge bg-{% if object.payment_status == 'paid' %}success{% elif object.payment_status == 'pending' %}warning{% elif object.payment_status == 'failed' %}danger{% else %}secondary{% endif %}">
+                                        {{ object.get_payment_status_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.internal_notes.id_for_label }}" class="form-label">Internal Notes</label>
+                        {{ form.internal_notes }}
+                        {% if form.internal_notes.errors %}
+                            <div class="text-danger">
+                                {% for error in form.internal_notes.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            Add any internal notes about this status change. These notes will be visible to other staff members.
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'orders:pharmacist_order_detail' object.pk %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save me-1"></i>Update Status
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Order Summary -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Order Summary
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Customer:</strong> {{ object.customer_name }}</p>
+                <p><strong>Phone:</strong> {{ object.customer_phone }}</p>
+                <p><strong>Total Amount:</strong> ${{ object.total_amount|floatformat:2 }}</p>
+                <p><strong>Delivery Method:</strong> {{ object.get_delivery_method_display }}</p>
+                <p><strong>Created:</strong> {{ object.created_at|date:"M d, Y H:i" }}</p>
+                {% if object.sales_rep %}
+                <p><strong>Sales Rep:</strong> {{ object.sales_rep.get_full_name|default:object.sales_rep.username }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Status Guidelines -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Status Guidelines
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6 class="text-warning">Pending</h6>
+                    <small class="text-muted">Order received, awaiting processing</small>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-info">Processing</h6>
+                    <small class="text-muted">Order is being prepared and verified</small>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-success">Ready for Pickup</h6>
+                    <small class="text-muted">Order is ready for customer pickup</small>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-primary">Shipped</h6>
+                    <small class="text-muted">Order has been shipped to customer</small>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-dark">Delivered</h6>
+                    <small class="text-muted">Order has been delivered to customer</small>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-danger">Cancelled</h6>
+                    <small class="text-muted">Order has been cancelled</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

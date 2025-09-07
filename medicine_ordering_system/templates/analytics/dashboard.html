@@ -1,0 +1,458 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Analytics Dashboard - OnCare{% endblock %}
+
+{% block extra_css %}
+<style>
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .metric-label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    
+    .chart-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .forecast-card {
+        border-left: 4px solid #28a745;
+    }
+    
+    .alert-card {
+        border-left: 4px solid #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-chart-line me-2"></i>Analytics Dashboard
+        </h1>
+    </div>
+</div>
+
+<!-- Key Metrics Row -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value" id="total-forecasts">0</div>
+            <div class="metric-label">Active Forecasts</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value" id="low-stock-items">0</div>
+            <div class="metric-label">Low Stock Items</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value" id="avg-accuracy">0%</div>
+            <div class="metric-label">Avg Forecast Accuracy</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value" id="optimization-savings">$0</div>
+            <div class="metric-label">Cost Savings</div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row">
+    <!-- Demand Forecast Chart -->
+    <div class="col-lg-8">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-area me-2"></i>Demand Forecast Trends
+            </h5>
+            <div class="chart-container" style="height: 400px;">
+                <canvas id="demandForecastChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Forecast Accuracy Chart -->
+    <div class="col-lg-4">
+        <div class="chart-container">
+            <h5 class="mb-3">
+                <i class="fas fa-bullseye me-2"></i>Forecast Accuracy
+            </h5>
+            <div class="chart-container" style="height: 400px;">
+                <canvas id="accuracyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Forecasts and Alerts Row -->
+<div class="row">
+    <!-- Recent Forecasts -->
+    <div class="col-lg-6">
+        <div class="card forecast-card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-clock me-2"></i>Recent Forecasts
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Medicine</th>
+                                <th>Period</th>
+                                <th>Accuracy</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-forecasts-table">
+                            {% for forecast in recent_forecasts %}
+                            <tr>
+                                <td>{{ forecast.medicine.name }}</td>
+                                <td>{{ forecast.forecast_period|title }}</td>
+                                <td>
+                                    <span class="badge bg-{% if forecast.mape < 20 %}success{% elif forecast.mape < 40 %}warning{% else %}danger{% endif %}">
+                                        {{ forecast.mape|floatformat:1 }}%
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if forecast.is_active %}success{% else %}secondary{% endif %}">
+                                        {% if forecast.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No forecasts available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Low Stock Alerts -->
+    <div class="col-lg-6">
+        <div class="card alert-card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Low Stock Alerts
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Medicine</th>
+                                <th>Current Stock</th>
+                                <th>Reorder Point</th>
+                                <th>Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody id="low-stock-table">
+                            {% for medicine in low_stock_medicines %}
+                            <tr>
+                                <td>{{ medicine.name }}</td>
+                                <td>
+                                    <span class="badge bg-{% if medicine.current_stock == 0 %}danger{% else %}warning{% endif %}">
+                                        {{ medicine.current_stock }}
+                                    </span>
+                                </td>
+                                <td>{{ medicine.reorder_point }}</td>
+                                <td>
+                                    <span class="badge bg-{% if medicine.current_stock == 0 %}danger{% elif medicine.current_stock <= medicine.reorder_point %}warning{% else %}info{% endif %}">
+                                        {% if medicine.current_stock == 0 %}Critical{% elif medicine.current_stock <= medicine.reorder_point %}High{% else %}Medium{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No low stock alerts</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Quick Actions</h5>
+                <div class="row">
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100 mb-2" onclick="generateBulkForecasts()">
+                            <i class="fas fa-magic me-2"></i>Generate Bulk Forecasts
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success w-100 mb-2" onclick="optimizeInventory()">
+                            <i class="fas fa-cogs me-2"></i>Optimize Inventory
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-info w-100 mb-2" onclick="viewReports()">
+                            <i class="fas fa-file-alt me-2"></i>View Reports
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-warning w-100 mb-2" onclick="exportData()">
+                            <i class="fas fa-download me-2"></i>Export Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Forecast Generation Modal -->
+<div class="modal fade" id="forecastModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Generate Demand Forecast</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="forecastForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="medicineSelect" class="form-label">Select Medicine</label>
+                                <select class="form-select" id="medicineSelect" required>
+                                    <option value="">Choose a medicine...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="forecastPeriod" class="form-label">Forecast Period</label>
+                                <select class="form-select" id="forecastPeriod">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly" selected>Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="forecastHorizon" class="form-label">Forecast Horizon (periods)</label>
+                                <input type="number" class="form-control" id="forecastHorizon" value="4" min="1" max="12">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="serviceLevel" class="form-label">Service Level (%)</label>
+                                <input type="number" class="form-control" id="serviceLevel" value="95" min="80" max="99">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="generateForecast()">Generate Forecast</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    loadDashboardData();
+    loadDemandForecastChart();
+    loadAccuracyChart();
+    loadMedicines();
+});
+
+function loadDashboardData() {
+    // Load key metrics
+    $.ajax({
+        url: '/analytics/api/system-metrics/',
+        method: 'GET',
+        success: function(data) {
+            // Update metrics (this would be calculated from the data)
+            $('#total-forecasts').text('{{ recent_forecasts|length }}');
+            $('#low-stock-items').text('{{ low_stock_medicines|length }}');
+            $('#avg-accuracy').text('85.2%'); // This would be calculated
+            $('#optimization-savings').text('$12,450'); // This would be calculated
+        }
+    });
+}
+
+function loadDemandForecastChart() {
+    // Sample data - in real implementation, this would come from API
+    const ctx = document.getElementById('demandForecastChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+            datasets: [{
+                label: 'Historical Demand',
+                data: [120, 135, 150, 140, 160, 155, 170, 165],
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1
+            }, {
+                label: 'Forecasted Demand',
+                data: [null, null, null, null, null, null, 175, 180],
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Demand Forecast Trends'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Quantity'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function loadAccuracyChart() {
+    const ctx = document.getElementById('accuracyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Excellent (<10%)', 'Good (10-20%)', 'Fair (20-30%)', 'Poor (>30%)'],
+            datasets: [{
+                data: [45, 30, 20, 5],
+                backgroundColor: [
+                    'rgb(40, 167, 69)',
+                    'rgb(255, 193, 7)',
+                    'rgb(255, 152, 0)',
+                    'rgb(220, 53, 69)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Forecast Accuracy Distribution'
+                }
+            }
+        }
+    });
+}
+
+function loadMedicines() {
+    $.ajax({
+        url: '/inventory/api/medicines/',
+        method: 'GET',
+        success: function(data) {
+            const select = $('#medicineSelect');
+            select.empty().append('<option value="">Choose a medicine...</option>');
+            data.medicines.forEach(function(medicine) {
+                select.append(`<option value="${medicine.id}">${medicine.name}</option>`);
+            });
+        }
+    });
+}
+
+function generateForecast() {
+    const medicineId = $('#medicineSelect').val();
+    const forecastPeriod = $('#forecastPeriod').val();
+    const forecastHorizon = $('#forecastHorizon').val();
+    
+    if (!medicineId) {
+        showAlert('warning', 'Please select a medicine');
+        return;
+    }
+    
+    $.ajax({
+        url: '/analytics/api/forecast/generate/',
+        method: 'POST',
+        data: {
+            'medicine_id': medicineId,
+            'forecast_period': forecastPeriod,
+            'forecast_horizon': forecastHorizon,
+            'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response) {
+            showAlert('success', 'Forecast generated successfully!');
+            $('#forecastModal').modal('hide');
+            location.reload();
+        },
+        error: function(xhr) {
+            const error = xhr.responseJSON?.error || 'Failed to generate forecast';
+            showAlert('danger', error);
+        }
+    });
+}
+
+function generateBulkForecasts() {
+    // Implementation for bulk forecast generation
+    showAlert('info', 'Bulk forecast generation feature coming soon!');
+}
+
+function optimizeInventory() {
+    // Implementation for inventory optimization
+    showAlert('info', 'Inventory optimization feature coming soon!');
+}
+
+function viewReports() {
+    window.location.href = '/oncare-admin/reports/';
+}
+
+function exportData() {
+    // Implementation for data export
+    showAlert('info', 'Data export feature coming soon!');
+}
+</script>
+{% endblock %}
+
+

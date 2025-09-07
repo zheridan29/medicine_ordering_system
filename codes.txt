@@ -1,0 +1,116 @@
+list users:
+venv\Scripts\python.exe manage.py shell -c "from accounts.models import User; print('Existing users:'); [print(f'Username: {u.username}, Role: {u.role}, Is Admin: {u.is_admin}') for u in User.objects.all()]"
+
+create admin:
+venv\Scripts\python.exe manage.py shell -c "from accounts.models import User; admin = User.objects.create_user(username='admin', email='admin@oncare.com', password='admin123', role='admin', first_name='System', last_name='Administrator'); print(f'Admin user created: {admin.username}')"
+
+create medicine
+venv\Scripts\python.exe manage.py shell -c "
+from inventory.models import Category, Manufacturer, Medicine
+from decimal import Decimal
+
+# Create categories
+cat1, created = Category.objects.get_or_create(name='Pain Relief', defaults={'description': 'Pain management medications'})
+cat2, created = Category.objects.get_or_create(name='Antibiotics', defaults={'description': 'Antibacterial medications'})
+cat3, created = Category.objects.get_or_create(name='Vitamins', defaults={'description': 'Vitamin supplements'})
+
+# Create manufacturers
+man1, created = Manufacturer.objects.get_or_create(name='Pfizer Inc.', defaults={'country': 'USA', 'contact_email': 'info@pfizer.com'})
+man2, created = Manufacturer.objects.get_or_create(name='Johnson & Johnson', defaults={'country': 'USA', 'contact_email': 'info@jnj.com'})
+man3, created = Manufacturer.objects.get_or_create(name='Bayer AG', defaults={'country': 'Germany', 'contact_email': 'info@bayer.com'})
+
+# Create medicines
+venv\Scripts\python.exe -c "
+import os
+import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'medicine_ordering_system.settings')
+django.setup()
+
+from inventory.models import Category, Manufacturer, Medicine
+from decimal import Decimal
+
+# Create categories
+cat1, created = Category.objects.get_or_create(name='Pain Relief', defaults={'description': 'Pain management medications'})
+cat2, created = Category.objects.get_or_create(name='Antibiotics', defaults={'description': 'Antibacterial medications'})
+cat3, created = Category.objects.get_or_create(name='Vitamins', defaults={'description': 'Vitamin supplements'})
+
+# Create manufacturers
+man1, created = Manufacturer.objects.get_or_create(name='Pfizer Inc.', defaults={'country': 'USA', 'contact_email': 'info@pfizer.com'})
+man2, created = Manufacturer.objects.get_or_create(name='Johnson & Johnson', defaults={'country': 'USA', 'contact_email': 'info@jnj.com'})
+man3, created = Manufacturer.objects.get_or_create(name='Bayer AG', defaults={'country': 'Germany', 'contact_email': 'info@bayer.com'})
+
+# Create medicines with unique NDC numbers
+med1, created = Medicine.objects.get_or_create(
+    name='Paracetamol 500mg',
+    defaults={
+        'generic_name': 'Acetaminophen',
+        'description': 'Pain relief and fever reducer',
+        'category': cat1,
+        'manufacturer': man1,
+        'dosage_form': 'Tablet',
+        'strength': '500mg',
+        'prescription_type': 'otc',
+        'unit_price': Decimal('2.50'),
+        'cost_price': Decimal('1.00'),
+        'current_stock': 100,
+        'minimum_stock_level': 20,
+        'maximum_stock_level': 500,
+        'reorder_point': 30,
+        'ndc_number': '12345-678-90',
+        'is_active': True,
+        'is_available': True,
+        'requires_prescription': False
+    }
+)
+
+med2, created = Medicine.objects.get_or_create(
+    name='Amoxicillin 250mg',
+    defaults={
+        'generic_name': 'Amoxicillin',
+        'description': 'Antibiotic for bacterial infections',
+        'category': cat2,
+        'manufacturer': man2,
+        'dosage_form': 'Capsule',
+        'strength': '250mg',
+        'prescription_type': 'prescription',
+        'unit_price': Decimal('5.00'),
+        'cost_price': Decimal('2.00'),
+        'current_stock': 50,
+        'minimum_stock_level': 10,
+        'maximum_stock_level': 200,
+        'reorder_point': 15,
+        'ndc_number': '23456-789-01',
+        'is_active': True,
+        'is_available': True,
+        'requires_prescription': True
+    }
+)
+
+med3, created = Medicine.objects.get_or_create(
+    name='Vitamin C 1000mg',
+    defaults={
+        'generic_name': 'Ascorbic Acid',
+        'description': 'Vitamin C supplement for immune support',
+        'category': cat3,
+        'manufacturer': man3,
+        'dosage_form': 'Tablet',
+        'strength': '1000mg',
+        'prescription_type': 'otc',
+        'unit_price': Decimal('3.00'),
+        'cost_price': Decimal('1.20'),
+        'current_stock': 75,
+        'minimum_stock_level': 15,
+        'maximum_stock_level': 300,
+        'reorder_point': 25,
+        'ndc_number': '34567-890-12',
+        'is_active': True,
+        'is_available': True,
+        'requires_prescription': False
+    }
+)
+
+print('Sample data created successfully!')
+print(f'Categories: {Category.objects.count()}')
+print(f'Manufacturers: {Manufacturer.objects.count()}')
+print(f'Medicines: {Medicine.objects.count()}')
+"

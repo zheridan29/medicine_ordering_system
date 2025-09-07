@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notifications - OnCare{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-bell me-2"></i>My Notifications</h1>
+            <div>
+                <a href="{% url 'common:notification_list' %}?is_read=false" class="btn btn-outline-warning">
+                    <i class="fas fa-eye-slash me-1"></i>Unread Only
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="notification_type" class="form-label">Type</label>
+                        <select class="form-select" id="notification_type" name="notification_type">
+                            <option value="">All Types</option>
+                            <option value="order_update" {% if request.GET.notification_type == 'order_update' %}selected{% endif %}>Order Update</option>
+                            <option value="stock_alert" {% if request.GET.notification_type == 'stock_alert' %}selected{% endif %}>Stock Alert</option>
+                            <option value="prescription_ready" {% if request.GET.notification_type == 'prescription_ready' %}selected{% endif %}>Prescription Ready</option>
+                            <option value="payment_confirmation" {% if request.GET.notification_type == 'payment_confirmation' %}selected{% endif %}>Payment Confirmation</option>
+                            <option value="system_maintenance" {% if request.GET.notification_type == 'system_maintenance' %}selected{% endif %}>System Maintenance</option>
+                            <option value="promotion" {% if request.GET.notification_type == 'promotion' %}selected{% endif %}>Promotion</option>
+                            <option value="security_alert" {% if request.GET.notification_type == 'security_alert' %}selected{% endif %}>Security Alert</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="is_read" class="form-label">Status</label>
+                        <select class="form-select" id="is_read" name="is_read">
+                            <option value="">All Notifications</option>
+                            <option value="false" {% if request.GET.is_read == 'false' %}selected{% endif %}>Unread</option>
+                            <option value="true" {% if request.GET.is_read == 'true' %}selected{% endif %}>Read</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>Filter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications List -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% if notifications %}
+                    <div class="list-group">
+                        {% for notification in notifications %}
+                        <div class="list-group-item {% if not notification.is_read %}bg-light{% endif %}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        {% if notification.notification_type == 'order_update' %}
+                                            <i class="fas fa-shopping-cart text-primary fa-2x"></i>
+                                        {% elif notification.notification_type == 'stock_alert' %}
+                                            <i class="fas fa-exclamation-triangle text-warning fa-2x"></i>
+                                        {% elif notification.notification_type == 'prescription_ready' %}
+                                            <i class="fas fa-file-medical text-success fa-2x"></i>
+                                        {% elif notification.notification_type == 'payment_confirmation' %}
+                                            <i class="fas fa-credit-card text-info fa-2x"></i>
+                                        {% elif notification.notification_type == 'system_maintenance' %}
+                                            <i class="fas fa-tools text-secondary fa-2x"></i>
+                                        {% elif notification.notification_type == 'promotion' %}
+                                            <i class="fas fa-gift text-danger fa-2x"></i>
+                                        {% elif notification.notification_type == 'security_alert' %}
+                                            <i class="fas fa-shield-alt text-danger fa-2x"></i>
+                                        {% else %}
+                                            <i class="fas fa-bell text-muted fa-2x"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-1">
+                                            {{ notification.title }}
+                                            {% if not notification.is_read %}
+                                                <span class="badge bg-primary">New</span>
+                                            {% endif %}
+                                        </h5>
+                                        <p class="mb-1">{{ notification.message }}</p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>{{ notification.created_at|date:"M d, Y H:i" }}
+                                            <span class="ms-3">
+                                                <span class="badge bg-{{ notification.priority|lower|add:'-primary' }}">
+                                                    {{ notification.get_priority_display }}
+                                                </span>
+                                            </span>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <a href="{% url 'common:notification_detail' notification.pk %}" class="btn btn-sm btn-outline-primary mb-2">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                    {% if not notification.is_read %}
+                                        <button class="btn btn-sm btn-outline-success" onclick="markAsRead({{ notification.id }})">
+                                            <i class="fas fa-check"></i> Mark Read
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                        <nav aria-label="Notifications pagination" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1{% if request.GET.notification_type %}&notification_type={{ request.GET.notification_type }}{% endif %}{% if request.GET.is_read %}&is_read={{ request.GET.is_read }}{% endif %}">First</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.notification_type %}&notification_type={{ request.GET.notification_type }}{% endif %}{% if request.GET.is_read %}&is_read={{ request.GET.is_read }}{% endif %}">Previous</a>
+                                    </li>
+                                {% endif %}
+
+                                <li class="page-item active">
+                                    <span class="page-link">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                    </span>
+                                </li>
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.notification_type %}&notification_type={{ request.GET.notification_type }}{% endif %}{% if request.GET.is_read %}&is_read={{ request.GET.is_read }}{% endif %}">Next</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.notification_type %}&notification_type={{ request.GET.notification_type }}{% endif %}{% if request.GET.is_read %}&is_read={{ request.GET.is_read }}{% endif %}">Last</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-bell fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No notifications found</h5>
+                        <p class="text-muted">You don't have any notifications matching your current filters</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function markAsRead(notificationId) {
+        fetch('{% url "common:notification_mark_read" 0 %}'.replace('0', notificationId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload();
+            } else {
+                alert('Error marking notification as read');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error marking notification as read');
+        });
+    }
+</script>
+{% endblock %}
+
+
+

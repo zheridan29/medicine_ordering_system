@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirm Logout - OnCare{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Logout
+                </h5>
+            </div>
+            <div class="card-body text-center py-4">
+                <div class="mb-4">
+                    <i class="fas fa-sign-out-alt fa-3x text-warning"></i>
+                </div>
+                
+                <h4 class="card-title mb-3">Are you sure you want to logout?</h4>
+                
+                <p class="card-text text-muted mb-4">
+                    You will be logged out of your OnCare account and redirected to the home page. 
+                    You can login again anytime to access your account.
+                </p>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> Any unsaved changes will be lost.
+                </div>
+                
+                <div class="d-grid gap-2 d-md-block">
+                    <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fas fa-sign-out-alt me-2"></i>Yes, Logout
+                        </button>
+                    </form>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Information -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-user me-2"></i>Current Session
+                </h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>User:</strong> {{ user.get_full_name|default:user.username }}</p>
+                        <p class="mb-1"><strong>Role:</strong> {{ user.get_role_display }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
+                        <p class="mb-0"><strong>Last Login:</strong> {{ user.last_login|date:"M d, Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .fa-sign-out-alt {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+{% endblock %}
+
+
+

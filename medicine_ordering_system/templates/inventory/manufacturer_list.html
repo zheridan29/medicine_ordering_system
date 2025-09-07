@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manufacturers - OnCare{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">
+                        <i class="fas fa-industry me-2"></i>Manufacturers
+                    </h2>
+                    <p class="text-muted mb-0">Manage medicine manufacturers and suppliers</p>
+                </div>
+                <div>
+                    <a href="{% url 'inventory:manufacturer_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add Manufacturer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manufacturers List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-list me-2"></i>All Manufacturers
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if manufacturers %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Country</th>
+                                        <th>Contact Email</th>
+                                        <th>Contact Phone</th>
+                                        <th>Website</th>
+                                        <th>Medicines Count</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for manufacturer in manufacturers %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ manufacturer.name }}</strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ manufacturer.country }}</span>
+                                            </td>
+                                            <td>
+                                                {% if manufacturer.contact_email %}
+                                                    <a href="mailto:{{ manufacturer.contact_email }}" class="text-decoration-none">
+                                                        {{ manufacturer.contact_email }}
+                                                    </a>
+                                                {% else %}
+                                                    <span class="text-muted">No email</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if manufacturer.contact_phone %}
+                                                    <a href="tel:{{ manufacturer.contact_phone }}" class="text-decoration-none">
+                                                        {{ manufacturer.contact_phone }}
+                                                    </a>
+                                                {% else %}
+                                                    <span class="text-muted">No phone</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if manufacturer.website %}
+                                                    <a href="{{ manufacturer.website }}" target="_blank" class="text-decoration-none">
+                                                        <i class="fas fa-external-link-alt me-1"></i>Visit
+                                                    </a>
+                                                {% else %}
+                                                    <span class="text-muted">No website</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success">{{ manufacturer.medicines.count }}</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{% url 'inventory:manufacturer_edit' manufacturer.pk %}" 
+                                                       class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="{% url 'inventory:medicine_list' %}?manufacturer={{ manufacturer.pk }}" 
+                                                       class="btn btn-sm btn-outline-info">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="{% url 'inventory:manufacturer_delete' manufacturer.pk %}" 
+                                                       class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if is_paginated %}
+                            <nav aria-label="Manufacturers pagination">
+                                <ul class="pagination justify-content-center">
+                                    {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=1">First</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="page-item active">
+                                        <span class="page-link">
+                                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                        </span>
+                                    </li>
+
+                                    {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-industry fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Manufacturers Found</h5>
+                            <p class="text-muted">Start by creating your first manufacturer.</p>
+                            <a href="{% url 'inventory:manufacturer_create' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Create First Manufacturer
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .table th {
+        border-top: none;
+        font-weight: 600;
+    }
+    
+    .btn-group .btn {
+        margin-right: 2px;
+    }
+    
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+</style>
+{% endblock %}
+
+

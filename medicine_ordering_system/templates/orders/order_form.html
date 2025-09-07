@@ -1,0 +1,562 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Edit Order{% else %}Create Order{% endif %} - OnCare{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} me-2"></i>
+                {% if object %}Edit Order #{{ object.id }}{% else %}Create New Order{% endif %}
+            </h1>
+            <a href="{% url 'orders:order_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Orders
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-shopping-cart me-2"></i>Order Details
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post" id="orderForm">
+                    {% csrf_token %}
+                    
+                    <!-- Customer Information -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.customer_name.id_for_label }}" class="form-label">Customer Name *</label>
+                                {{ form.customer_name }}
+                                {% if form.customer_name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.customer_name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.customer_phone.id_for_label }}" class="form-label">Customer Phone *</label>
+                                {{ form.customer_phone }}
+                                {% if form.customer_phone.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.customer_phone.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.customer_address.id_for_label }}" class="form-label">Customer Address *</label>
+                        {{ form.customer_address }}
+                        {% if form.customer_address.errors %}
+                            <div class="text-danger">
+                                {% for error in form.customer_address.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Delivery Information -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.delivery_method.id_for_label }}" class="form-label">Delivery Method *</label>
+                                {{ form.delivery_method }}
+                                {% if form.delivery_method.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.delivery_method.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.payment_status.id_for_label }}" class="form-label">Payment Status *</label>
+                                {{ form.payment_status }}
+                                {% if form.payment_status.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.payment_status.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.delivery_address.id_for_label }}" class="form-label">Delivery Address *</label>
+                        {{ form.delivery_address }}
+                        {% if form.delivery_address.errors %}
+                            <div class="text-danger">
+                                {% for error in form.delivery_address.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.delivery_instructions.id_for_label }}" class="form-label">Delivery Instructions</label>
+                        {{ form.delivery_instructions }}
+                        {% if form.delivery_instructions.errors %}
+                            <div class="text-danger">
+                                {% for error in form.delivery_instructions.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.customer_notes.id_for_label }}" class="form-label">Customer Notes</label>
+                        {{ form.customer_notes }}
+                        {% if form.customer_notes.errors %}
+                            <div class="text-danger">
+                                {% for error in form.customer_notes.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Medicine Selection Fields (only for new orders) -->
+                    {% if not object %}
+                    <div class="mt-4">
+                        <h6 class="mb-3">
+                            <i class="fas fa-pills me-2"></i>Select Medicines
+                            <small class="text-muted">(Select up to 5 medicines for this order. At least one medicine is required.)</small>
+                        </h6>
+                        
+                        <!-- Medicine Selection Fields -->
+                        <div class="row mb-3 medicine-row" id="medicine-row-1">
+                            <div class="col-md-5">
+                                <label for="{{ form.medicine_1.id_for_label }}" class="form-label">
+                                    Medicine 1
+                                </label>
+                                {{ form.medicine_1 }}
+                                {% if form.medicine_1.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.medicine_1.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.quantity_1.id_for_label }}" class="form-label">
+                                    Quantity
+                                </label>
+                                {{ form.quantity_1 }}
+                                {% if form.quantity_1.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.quantity_1.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Current Stock</label>
+                                <div class="form-control-plaintext" id="stock-display-1">
+                                    <span class="text-muted">Select a medicine</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-medicine" data-row="1">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3 medicine-row" id="medicine-row-2" style="display: none;">
+                            <div class="col-md-5">
+                                <label for="{{ form.medicine_2.id_for_label }}" class="form-label">
+                                    Medicine 2
+                                </label>
+                                {{ form.medicine_2 }}
+                                {% if form.medicine_2.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.medicine_2.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.quantity_2.id_for_label }}" class="form-label">
+                                    Quantity
+                                </label>
+                                {{ form.quantity_2 }}
+                                {% if form.quantity_2.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.quantity_2.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Current Stock</label>
+                                <div class="form-control-plaintext" id="stock-display-2">
+                                    <span class="text-muted">Select a medicine</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-medicine" data-row="2">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3 medicine-row" id="medicine-row-3" style="display: none;">
+                            <div class="col-md-5">
+                                <label for="{{ form.medicine_3.id_for_label }}" class="form-label">
+                                    Medicine 3
+                                </label>
+                                {{ form.medicine_3 }}
+                                {% if form.medicine_3.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.medicine_3.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.quantity_3.id_for_label }}" class="form-label">
+                                    Quantity
+                                </label>
+                                {{ form.quantity_3 }}
+                                {% if form.quantity_3.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.quantity_3.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Current Stock</label>
+                                <div class="form-control-plaintext" id="stock-display-3">
+                                    <span class="text-muted">Select a medicine</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-medicine" data-row="3">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3 medicine-row" id="medicine-row-4" style="display: none;">
+                            <div class="col-md-5">
+                                <label for="{{ form.medicine_4.id_for_label }}" class="form-label">
+                                    Medicine 4
+                                </label>
+                                {{ form.medicine_4 }}
+                                {% if form.medicine_4.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.medicine_4.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.quantity_4.id_for_label }}" class="form-label">
+                                    Quantity
+                                </label>
+                                {{ form.quantity_4 }}
+                                {% if form.quantity_4.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.quantity_4.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Current Stock</label>
+                                <div class="form-control-plaintext" id="stock-display-4">
+                                    <span class="text-muted">Select a medicine</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-medicine" data-row="4">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3 medicine-row" id="medicine-row-5" style="display: none;">
+                            <div class="col-md-5">
+                                <label for="{{ form.medicine_5.id_for_label }}" class="form-label">
+                                    Medicine 5
+                                </label>
+                                {{ form.medicine_5 }}
+                                {% if form.medicine_5.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.medicine_5.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.quantity_5.id_for_label }}" class="form-label">
+                                    Quantity
+                                </label>
+                                {{ form.quantity_5 }}
+                                {% if form.quantity_5.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.quantity_5.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Current Stock</label>
+                                <div class="form-control-plaintext" id="stock-display-5">
+                                    <span class="text-muted">Select a medicine</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-medicine" data-row="5">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Add More Medicine Button -->
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-outline-primary" id="addMedicine">
+                                    <i class="fas fa-plus me-1"></i>Add Another Medicine
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'orders:order_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>
+                            {% if object %}Update Order{% else %}Create Order{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Order Items Section (for existing orders) -->
+{% if object %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list me-2"></i>Order Items
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if object.items.all %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Medicine</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in object.items.all %}
+                                <tr>
+                                    <td>{{ item.medicine.name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>${{ item.unit_price|floatformat:2 }}</td>
+                                    <td>${{ item.total_price|floatformat:2 }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i> Remove
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">No items in this order yet</p>
+                        <a href="{% url 'inventory:medicine_list' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>Add Items
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Medicine stock data cache
+        const medicineStockData = {};
+        
+        // Function to fetch medicine stock information
+        function fetchMedicineStock(medicineId, rowNum) {
+            if (medicineId) {
+                // Check if we already have the data
+                if (medicineStockData[medicineId]) {
+                    updateStockDisplay(medicineStockData[medicineId], rowNum);
+                } else {
+                    // Fetch from API
+                    $.ajax({
+                        url: `/inventory/api/medicines/${medicineId}/`,
+                        method: 'GET',
+                        success: function(data) {
+                            medicineStockData[medicineId] = data;
+                            updateStockDisplay(data, rowNum);
+                        },
+                        error: function() {
+                            updateStockDisplay({current_stock: 'N/A'}, rowNum);
+                        }
+                    });
+                }
+            } else {
+                updateStockDisplay(null, rowNum);
+            }
+        }
+        
+        // Function to update stock display
+        function updateStockDisplay(medicineData, rowNum) {
+            const stockDisplay = $(`#stock-display-${rowNum}`);
+            if (medicineData) {
+                const stock = medicineData.current_stock;
+                const reorderPoint = medicineData.reorder_point || 0;
+                let stockClass = 'text-success';
+                let stockText = stock;
+                
+                if (stock === 0) {
+                    stockClass = 'text-danger';
+                    stockText = 'Out of Stock';
+                } else if (stock <= reorderPoint) {
+                    stockClass = 'text-warning';
+                    stockText = `${stock} (Low Stock)`;
+                } else if (stock <= 10) {
+                    stockClass = 'text-info';
+                    stockText = `${stock} (Limited)`;
+                }
+                
+                stockDisplay.html(`<span class="${stockClass} fw-bold">${stockText}</span>`);
+            } else {
+                stockDisplay.html('<span class="text-muted">Select a medicine</span>');
+            }
+        }
+        
+        // Show/hide medicine rows based on selection
+        function toggleMedicineRows() {
+            $('.medicine-row').each(function() {
+                const medicineSelect = $(this).find('select[name*="medicine_"]');
+                const quantityInput = $(this).find('input[name*="quantity_"]');
+                const removeBtn = $(this).find('.remove-medicine');
+                const rowNum = $(this).attr('id').split('-')[2];
+                
+                if (medicineSelect.val()) {
+                    $(this).show();
+                    quantityInput.prop('required', true);
+                    // Fetch and display stock information
+                    fetchMedicineStock(medicineSelect.val(), rowNum);
+                } else {
+                    $(this).hide();
+                    quantityInput.prop('required', false);
+                    quantityInput.val('');
+                    updateStockDisplay(null, rowNum);
+                }
+            });
+        }
+        
+        // Add medicine button
+        $('#addMedicine').click(function() {
+            const visibleRows = $('.medicine-row:visible').length;
+            if (visibleRows < 5) {
+                const nextRow = visibleRows + 1;
+                $(`#medicine-row-${nextRow}`).show();
+                $(`#medicine-row-${nextRow} select[name*="medicine_"]`).prop('required', true);
+            }
+        });
+        
+        // Remove medicine button
+        $('.remove-medicine').click(function() {
+            const rowNum = $(this).data('row');
+            $(`#medicine-row-${rowNum}`).hide();
+            $(`#medicine-row-${rowNum} select[name*="medicine_"]`).val('').prop('required', false);
+            $(`#medicine-row-${rowNum} input[name*="quantity_"]`).val('');
+            updateStockDisplay(null, rowNum);
+        });
+        
+        // Initialize
+        toggleMedicineRows();
+        
+        // Update on medicine selection change
+        $('select[name*="medicine_"]').change(function() {
+            const rowNum = $(this).closest('.medicine-row').attr('id').split('-')[2];
+            fetchMedicineStock($(this).val(), rowNum);
+            toggleMedicineRows();
+        });
+        
+        // Quantity validation
+        $('input[name*="quantity_"]').on('input', function() {
+            const medicineSelect = $(this).closest('.medicine-row').find('select[name*="medicine_"]');
+            const medicineId = medicineSelect.val();
+            const quantity = parseInt($(this).val());
+            
+            if (medicineId && quantity && medicineStockData[medicineId]) {
+                const availableStock = medicineStockData[medicineId].current_stock;
+                if (quantity > availableStock) {
+                    $(this).addClass('is-invalid');
+                    $(this).after(`<div class="invalid-feedback">Only ${availableStock} units available in stock</div>`);
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).next('.invalid-feedback').remove();
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

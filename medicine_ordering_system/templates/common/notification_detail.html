@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ notification.title }} - OnCare{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-bell me-2"></i>{{ notification.title }}
+            </h1>
+            <div>
+                {% if not notification.is_read %}
+                    <button class="btn btn-success me-2" onclick="markAsRead({{ notification.id }})">
+                        <i class="fas fa-check me-1"></i>Mark as Read
+                    </button>
+                {% endif %}
+                <a href="{% url 'common:notification_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Notifications
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Notification Details
+                    </h5>
+                    <div>
+                        {% if notification.is_read %}
+                            <span class="badge bg-success">Read</span>
+                        {% else %}
+                            <span class="badge bg-warning">Unread</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h6>Message</h6>
+                    <p class="lead">{{ notification.message }}</p>
+                </div>
+
+                {% if notification.action_url %}
+                    <div class="mb-4">
+                        <a href="{{ notification.action_url }}" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt me-1"></i>Take Action
+                        </a>
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Notification Information</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Type:</strong> {{ notification.get_notification_type_display }}</li>
+                            <li><strong>Priority:</strong> 
+                                <span class="badge bg-{{ notification.priority|lower|add:'-primary' }}">
+                                    {{ notification.get_priority_display }}
+                                </span>
+                            </li>
+                            <li><strong>Created:</strong> {{ notification.created_at|date:"F d, Y H:i" }}</li>
+                            {% if notification.read_at %}
+                                <li><strong>Read:</strong> {{ notification.read_at|date:"F d, Y H:i" }}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Delivery Status</h6>
+                        <ul class="list-unstyled">
+                            <li>
+                                <i class="fas fa-envelope {% if notification.email_sent %}text-success{% else %}text-muted{% endif %} me-2"></i>
+                                Email: {% if notification.email_sent %}Sent{% else %}Not sent{% endif %}
+                            </li>
+                            <li>
+                                <i class="fas fa-sms {% if notification.sms_sent %}text-success{% else %}text-muted{% endif %} me-2"></i>
+                                SMS: {% if notification.sms_sent %}Sent{% else %}Not sent{% endif %}
+                            </li>
+                            <li>
+                                <i class="fas fa-mobile-alt {% if notification.push_sent %}text-success{% else %}text-muted{% endif %} me-2"></i>
+                                Push: {% if notification.push_sent %}Sent{% else %}Not sent{% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user me-2"></i>Recipient
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><strong>User:</strong> {{ notification.user.get_full_name|default:notification.user.username }}</p>
+                <p><strong>Email:</strong> {{ notification.user.email }}</p>
+            </div>
+        </div>
+        
+        {% if notification.expires_at %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clock me-2"></i>Expiration
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">This notification expires on {{ notification.expires_at|date:"F d, Y H:i" }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function markAsRead(notificationId) {
+        fetch('{% url "common:notification_mark_read" 0 %}'.replace('0', notificationId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload();
+            } else {
+                alert('Error marking notification as read');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error marking notification as read');
+        });
+    }
+</script>
+{% endblock %}
+
+
+

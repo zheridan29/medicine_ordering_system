@@ -1,0 +1,4 @@
+Install pmdarima using binary files. tar.gz
+install crispyforms
+install crispyforms_bootstrap5
+install django_extensions

@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Verify Prescription - Order #{{ object.id }} - OnCare{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-check-circle me-2"></i>Verify Prescription - Order #{{ object.id }}
+            </h1>
+            <a href="{% url 'orders:order_detail' object.pk %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Order
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-file-medical me-2"></i>Prescription Verification
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if object.prescription_file %}
+                    <div class="mb-4">
+                        <h6>Uploaded Prescription:</h6>
+                        <div class="text-center">
+                            {% if object.prescription_file.name|slice:"-4:" == ".pdf" %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-file-pdf fa-3x mb-3"></i>
+                                    <p><strong>PDF File:</strong> {{ object.prescription_file.name|basename }}</p>
+                                    <a href="{{ object.prescription_file.url }}" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-eye me-1"></i>View PDF
+                                    </a>
+                                </div>
+                            {% else %}
+                                <img src="{{ object.prescription_file.url }}" alt="Prescription" class="img-fluid border rounded" style="max-height: 500px;">
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        No prescription file uploaded for this order.
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.verification_status.id_for_label }}" class="form-label">
+                            <strong>Verification Status</strong>
+                        </label>
+                        {{ form.verification_status }}
+                        {% if form.verification_status.errors %}
+                            <div class="text-danger">
+                                {% for error in form.verification_status.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.verification_notes.id_for_label }}" class="form-label">
+                            Verification Notes
+                        </label>
+                        {{ form.verification_notes }}
+                        {% if form.verification_notes.errors %}
+                            <div class="text-danger">
+                                {% for error in form.verification_notes.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Provide details about the verification process</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.verified_by.id_for_label }}" class="form-label">
+                            Verified By
+                        </label>
+                        {{ form.verified_by }}
+                        {% if form.verified_by.errors %}
+                            <div class="text-danger">
+                                {% for error in form.verified_by.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'orders:order_detail' object.pk %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-1"></i>Complete Verification
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Order Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6>Order Details</h6>
+                <p><strong>Order ID:</strong> #{{ object.id }}</p>
+                <p><strong>Customer:</strong> {{ object.customer_name }}</p>
+                <p><strong>Phone:</strong> {{ object.customer_phone }}</p>
+                <p><strong>Order Date:</strong> {{ object.created_at|date:"M d, Y" }}</p>
+                <p><strong>Total:</strong> ${{ object.total_amount|floatformat:2 }}</p>
+                
+                <hr>
+                
+                <h6>Prescription Details</h6>
+                {% if object.prescription_file %}
+                    <p><strong>File:</strong> {{ object.prescription_file.name|basename }}</p>
+                    <p><strong>Uploaded:</strong> {{ object.prescription_uploaded_at|date:"M d, Y H:i" }}</p>
+                {% else %}
+                    <p class="text-muted">No prescription uploaded</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clipboard-check me-2"></i>Verification Checklist
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="check1">
+                    <label class="form-check-label" for="check1">
+                        Prescription is clear and readable
+                    </label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="check2">
+                    <label class="form-check-label" for="check2">
+                        Doctor's signature is visible
+                    </label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="check3">
+                    <label class="form-check-label" for="check3">
+                        Prescription date is within 6 months
+                    </label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="check4">
+                    <label class="form-check-label" for="check4">
+                        Patient name matches order
+                    </label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="check5">
+                    <label class="form-check-label" for="check5">
+                        Medications match order items
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-fill verified_by field with current user
+    document.addEventListener('DOMContentLoaded', function() {
+        const verifiedByField = document.getElementById('{{ form.verified_by.id_for_label }}');
+        if (verifiedByField && !verifiedByField.value) {
+            verifiedByField.value = '{{ user.get_full_name|default:user.username }}';
+        }
+    });
+</script>
+{% endblock %}
+
+
+

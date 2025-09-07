@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Logged Out - OnCare{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-sign-out-alt fa-4x text-success"></i>
+                </div>
+                
+                {% if user.is_authenticated %}
+                    <h2 class="card-title text-warning mb-3">Confirm Logout</h2>
+                    
+                    <p class="card-text text-muted mb-4">
+                        You are currently logged in. Click the button below to logout of your OnCare account.
+                    </p>
+                {% else %}
+                    <h2 class="card-title text-success mb-3">Successfully Logged Out</h2>
+                    
+                    <p class="card-text text-muted mb-4">
+                        You have been successfully logged out of your OnCare account. 
+                        Thank you for using our medicine ordering system.
+                    </p>
+                {% endif %}
+                
+                <div class="d-grid gap-2 d-md-block">
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout Now
+                            </button>
+                        </form>
+                    {% endif %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login Again
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-home me-2"></i>Go to Home
+                    </a>
+                </div>
+                
+                <div class="mt-4">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Your session has been securely terminated
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional Information -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>What's Next?
+                </h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Your personal data is secure and protected
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        All active sessions have been cleared
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        You can safely close your browser
+                    </li>
+                    <li class="mb-0">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Login again anytime to access your account
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .fa-sign-out-alt {
+        animation: fadeIn 1s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-redirect to home page after 10 seconds
+    setTimeout(function() {
+        window.location.href = "{% url 'home' %}";
+    }, 10000);
+    
+    // Show countdown
+    let countdown = 10;
+    const countdownElement = document.createElement('div');
+    countdownElement.className = 'mt-3 text-muted';
+    countdownElement.innerHTML = `<small>Redirecting to home page in <span id="countdown">${countdown}</span> seconds...</small>`;
+    document.querySelector('.card-body').appendChild(countdownElement);
+    
+    const countdownInterval = setInterval(function() {
+        countdown--;
+        document.getElementById('countdown').textContent = countdown;
+        if (countdown <= 0) {
+            clearInterval(countdownInterval);
+        }
+    }, 1000);
+</script>
+{% endblock %}
+
+
+

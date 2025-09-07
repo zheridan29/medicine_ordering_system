@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Low Stock Medicines - OnCare{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-exclamation-triangle me-2 text-warning"></i>Low Stock Medicines</h1>
+            <div>
+                <a href="{% url 'inventory:dashboard' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                </a>
+                <a href="{% url 'inventory:stock_movement_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i>Add Stock
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ critical_stock|default:0 }}</h4>
+                        <p class="card-text">Critical Stock (Out of Stock)</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-times-circle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ low_stock|default:0 }}</h4>
+                        <p class="card-text">Low Stock</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ total_low_stock|default:0 }}</h4>
+                        <p class="card-text">Total Low Stock Items</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-boxes fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">Search Medicines</label>
+                        <input type="text" class="form-control" id="search" name="search" 
+                               value="{{ request.GET.search }}" placeholder="Search by name, generic name, category...">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="stock_level" class="form-label">Stock Level</label>
+                        <select class="form-select" id="stock_level" name="stock_level">
+                            <option value="">All Low Stock</option>
+                            <option value="critical" {% if request.GET.stock_level == 'critical' %}selected{% endif %}>Critical (Out of Stock)</option>
+                            <option value="low" {% if request.GET.stock_level == 'low' %}selected{% endif %}>Low Stock</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>Filter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Medicines List -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list me-2"></i>Low Stock Medicines
+                    <span class="badge bg-warning ms-2">{{ medicines|length }} item{{ medicines|length|pluralize }}</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if medicines %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Medicine</th>
+                                    <th>Category</th>
+                                    <th>Manufacturer</th>
+                                    <th>Current Stock</th>
+                                    <th>Reorder Point</th>
+                                    <th>Stock Status</th>
+                                    <th>Unit Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for medicine in medicines %}
+                                <tr class="{% if medicine.current_stock == 0 %}table-danger{% elif medicine.current_stock <= medicine.reorder_point %}table-warning{% endif %}">
+                                    <td>
+                                        <div>
+                                            <strong>{{ medicine.name }}</strong>
+                                            {% if medicine.generic_name %}
+                                                <br><small class="text-muted">{{ medicine.generic_name }}</small>
+                                            {% endif %}
+                                            {% if medicine.strength %}
+                                                <br><small class="text-muted">{{ medicine.strength }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ medicine.category.name }}</span>
+                                    </td>
+                                    <td>{{ medicine.manufacturer.name }}</td>
+                                    <td>
+                                        <span class="fw-bold {% if medicine.current_stock == 0 %}text-danger{% elif medicine.current_stock <= medicine.reorder_point %}text-warning{% endif %}">
+                                            {{ medicine.current_stock }}
+                                        </span>
+                                    </td>
+                                    <td>{{ medicine.reorder_point }}</td>
+                                    <td>
+                                        {% if medicine.current_stock == 0 %}
+                                            <span class="badge bg-danger">Out of Stock</span>
+                                        {% elif medicine.current_stock <= medicine.reorder_point %}
+                                            <span class="badge bg-warning">Low Stock</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>${{ medicine.unit_price|floatformat:2 }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'inventory:medicine_detail' medicine.pk %}" 
+                                               class="btn btn-sm btn-outline-primary" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if user.is_admin or user.is_pharmacist_admin %}
+                                                <a href="{% url 'inventory:medicine_edit' medicine.pk %}" 
+                                                   class="btn btn-sm btn-outline-warning" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{% url 'inventory:stock_movement_create' %}?medicine={{ medicine.pk }}" 
+                                                   class="btn btn-sm btn-outline-success" title="Add Stock">
+                                                    <i class="fas fa-plus"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                        <nav aria-label="Low stock medicines pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.stock_level %}&stock_level={{ request.GET.stock_level }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">First</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.stock_level %}&stock_level={{ request.GET.stock_level }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Previous</a>
+                                    </li>
+                                {% endif %}
+
+                                <li class="page-item active">
+                                    <span class="page-link">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                    </span>
+                                </li>
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.stock_level %}&stock_level={{ request.GET.stock_level }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Next</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.stock_level %}&stock_level={{ request.GET.stock_level }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Last</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <h4>No Low Stock Medicines Found</h4>
+                        <p class="text-muted">All medicines are well stocked!</p>
+                        <a href="{% url 'inventory:medicine_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list me-1"></i>View All Medicines
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'inventory:stock_movement_create' %}" class="btn btn-outline-success w-100">
+                            <i class="fas fa-plus me-2"></i>Add Stock
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'inventory:reorder_alert_list' %}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-bell me-2"></i>Reorder Alerts
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'inventory:medicine_list' %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-list me-2"></i>All Medicines
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'inventory:dashboard' %}" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <a href="{% url 'analytics:dashboard' %}" class="btn btn-outline-info w-100">
+                            <i class="fas fa-chart-line me-2"></i>Analytics
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

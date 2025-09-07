@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}OnCare Medicine Ordering System{% endblock %}
+
+{% block content %}
+<!-- Welcome Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white rounded p-5">
+            <div class="container-fluid">
+                <h1 class="display-4">
+                    <i class="fas fa-pills me-3"></i>Welcome to OnCare
+                </h1>
+                <p class="lead">
+                    Your trusted partner for medicine ordering and supply chain management.
+                </p>
+                <p class="mb-0">
+                    Hello, <strong>{{ user.get_full_name|default:user.username }}</strong>! 
+                    {% if user.is_admin %}
+                        You are logged in as an Administrator.
+                    {% elif user.is_pharmacist_admin %}
+                        You are logged in as a Pharmacist/Admin.
+                    {% else %}
+                        You are logged in as a Sales Representative.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    {% if user.is_admin %}
+        <!-- Admin Statistics -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ total_users|default:0 }}</h4>
+                            <p class="card-text">Total Users</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ total_orders|default:0 }}</h4>
+                            <p class="card-text">Total Orders</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-shopping-cart fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ total_medicines|default:0 }}</h4>
+                            <p class="card-text">Medicines</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-pills fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">${{ total_revenue|default:0|floatformat:2 }}</h4>
+                            <p class="card-text">Total Revenue</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elif user.is_pharmacist_admin %}
+        <!-- Pharmacist/Admin Statistics -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ total_medicines|default:0 }}</h4>
+                            <p class="card-text">Medicines</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-pills fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ low_stock_medicines|default:0 }}</h4>
+                            <p class="card-text">Low Stock</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ all_orders|default:0 }}</h4>
+                            <p class="card-text">All Orders</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-shopping-cart fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ pending_orders_count|default:0 }}</h4>
+                            <p class="card-text">Pending Orders</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- Sales Representative Statistics -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ user_orders|default:0 }}</h4>
+                            <p class="card-text">My Orders</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-shopping-cart fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ completed_orders|default:0 }}</h4>
+                            <p class="card-text">Completed</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ pending_orders|default:0 }}</h4>
+                            <p class="card-text">Pending</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ recent_orders|default:0 }}</h4>
+                            <p class="card-text">Today's Orders</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-calendar-day fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% if user.is_admin %}
+                        <div class="col-md-2 mb-3">
+                            <a href="{% url 'oncare_admin:dashboard' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+                            </a>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <a href="{% url 'analytics:dashboard' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-chart-line me-2"></i>Analytics
+                            </a>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <a href="{% url 'inventory:dashboard' %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-boxes me-2"></i>Inventory
+                            </a>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <a href="{% url 'orders:order_list' %}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-shopping-cart me-2"></i>Orders
+                            </a>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <a href="{% url 'transactions:dashboard' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-credit-card me-2"></i>Transactions
+                            </a>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <a href="{% url 'audits:dashboard' %}" class="btn btn-outline-dark w-100">
+                                <i class="fas fa-shield-alt me-2"></i>Audits
+                            </a>
+                        </div>
+                    {% elif user.is_pharmacist_admin %}
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'inventory:dashboard' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-tachometer-alt me-2"></i>Inventory Dashboard
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'inventory:medicine_list' %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-pills me-2"></i>Manage Medicines
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'inventory:category_list' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-tags me-2"></i>Categories
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'inventory:stock_movement_list' %}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-exchange-alt me-2"></i>Stock Movements
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'inventory:reorder_alert_list' %}" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Reorder Alerts
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'orders:order_list' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-shopping-cart me-2"></i>All Orders
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'analytics:dashboard' %}" class="btn btn-outline-dark w-100">
+                                <i class="fas fa-chart-line me-2"></i>Analytics
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'orders:dashboard' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-tachometer-alt me-2"></i>Sales Dashboard
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'inventory:medicine_list' %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-pills me-2"></i>Browse Medicines
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'orders:order_create' %}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-plus me-2"></i>Create Order
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'orders:order_list' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-list me-2"></i>My Orders
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-history me-2"></i>Recent Activity
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-5">
+                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Activity tracking coming soon</h5>
+                    <p class="text-muted">We're working on bringing you detailed activity insights.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .jumbotron {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    }
+    
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+</style>
+{% endblock %}
+
+
+

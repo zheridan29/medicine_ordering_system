@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Audits Dashboard - OnCare{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-shield-alt me-2"></i>Audits Dashboard</h1>
+            <div>
+                <a href="{% url 'audits:audit_log_list' %}" class="btn btn-primary">
+                    <i class="fas fa-list me-1"></i>View All Logs
+                </a>
+                <a href="{% url 'audits:security_event_list' %}" class="btn btn-outline-danger">
+                    <i class="fas fa-exclamation-triangle me-1"></i>Security Events
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ total_audit_logs|default:0 }}</h4>
+                        <p class="card-text">Total Audit Logs</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clipboard-list fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ security_events|default:0 }}</h4>
+                        <p class="card-text">Security Events</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ system_health_issues|default:0 }}</h4>
+                        <p class="card-text">Health Issues</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-heartbeat fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ compliance_violations|default:0 }}</h4>
+                        <p class="card-text">Compliance Issues</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-gavel fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-history me-2"></i>Recent Audit Logs
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-3">
+                    <p class="text-muted">Recent audit logs will appear here</p>
+                    <a href="{% url 'audits:audit_log_list' %}" class="btn btn-primary">
+                        <i class="fas fa-eye me-1"></i>View All Logs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Security Alerts
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-3">
+                    <p class="text-muted">Security alerts will appear here</p>
+                    <a href="{% url 'audits:security_event_list' %}" class="btn btn-danger">
+                        <i class="fas fa-shield-alt me-1"></i>View Security Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'audits:audit_log_list' %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-clipboard-list me-2"></i>Audit Logs
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'audits:security_event_list' %}" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Security Events
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'audits:system_health_list' %}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-heartbeat me-2"></i>System Health
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'audits:compliance_log_list' %}" class="btn btn-outline-info w-100">
+                            <i class="fas fa-gavel me-2"></i>Compliance
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
