@@ -4943,3 +4943,398 @@ Internal Server Error: /analytics/api/forecast/generate/
 "POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
 Bad Request: /analytics/api/forecast/generate/
 "POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/analytics/ HTTP/1.1" 200 7916
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/analytics/ HTTP/1.1" 302 0
+"GET /oncare-admin/ HTTP/1.1" 200 14518
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 36523
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1439
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1439
+"GET /analytics/api/sales-trends/6/ HTTP/1.1" 200 82
+Not Found: /analytics/api/inventory-optimization/6/
+"GET /analytics/api/inventory-optimization/6/ HTTP/1.1" 404 42
+"GET /oncare-admin/ HTTP/1.1" 200 14518
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 36523
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1439
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1439
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 36523
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+Not Found: /analytics/api/inventory-optimization/5/
+"GET /analytics/api/sales-trends/5/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/5/ HTTP/1.1" 404 42
+Internal Server Error: /transactions/
+Traceback (most recent call last):
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'report_sales' not found. 'report_sales' is not a valid view function or pattern name.
+"GET /transactions/ HTTP/1.1" 500 165317
+"GET /inventory/ HTTP/1.1" 200 12627
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/orders/ HTTP/1.1" 200 7916
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/orders/ HTTP/1.1" 302 0
+"GET /orders/ HTTP/1.1" 200 10563
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/orders/ HTTP/1.1" 200 8064
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /accounts/logout/confirm/ HTTP/1.1" 200 8285
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /accounts/login/?next=/ HTTP/1.1" 200 8817
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/ HTTP/1.1" 200 7934
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/ HTTP/1.1" 200 7934
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/ HTTP/1.1" 200 7934
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+Watching for file changes with StatReloader
+"POST /accounts/login/?next=/ HTTP/1.1" 302 0
+"GET /orders/ HTTP/1.1" 200 15273
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/orders/ HTTP/1.1" 200 28427
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/orders/?page=614 HTTP/1.1" 200 15994
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/orders/6095/ HTTP/1.1" 200 13679
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+Watching for file changes with StatReloader
+"GET /inventory/ HTTP/1.1" 200 12627
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /orders/orders/ HTTP/1.1" 200 29219
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/60384/ HTTP/1.1" 200 12294
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/?page=2840 HTTP/1.1" 200 29182
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/60404/ HTTP/1.1" 200 14855
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/?page=2839 HTTP/1.1" 200 29595
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/?page=2838 HTTP/1.1" 200 29595
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/orders/60444/ HTTP/1.1" 200 14863
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 36523
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+Not Found: /analytics/api/inventory-optimization/6/
+"GET /analytics/api/sales-trends/6/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/6/ HTTP/1.1" 404 42
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\services.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\services.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\services.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 37645
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 347
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+Internal Server Error: /analytics/api/forecast/extend/
+"POST /analytics/api/forecast/extend/ HTTP/1.1" 500 47
+Internal Server Error: /analytics/api/forecast/extend/
+"POST /analytics/api/forecast/extend/ HTTP/1.1" 500 47
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 40296
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 1017
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+Not Found: /analytics/api/inventory-optimization/6/
+"GET /analytics/api/sales-trends/6/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/6/ HTTP/1.1" 404 42
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+"GET /orders/orders/6095/ HTTP/1.1" 200 10978
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/ HTTP/1.1" 200 15271
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/orders/ HTTP/1.1" 200 7916
+"GET /static/css/custom.css HTTP/1.1" 200 7627
+"GET /static/js/common.js HTTP/1.1" 200 12581
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/orders/ HTTP/1.1" 302 0
+"GET /inventory/ HTTP/1.1" 200 12673
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 40342
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 1017
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+Not Found: /analytics/api/inventory-optimization/4/
+"GET /analytics/api/sales-trends/4/ HTTP/1.1" 200 82
+"GET /analytics/api/inventory-optimization/4/ HTTP/1.1" 404 42
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
+Bad Request: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 400 293
+Watching for file changes with StatReloader
+"GET /analytics/ HTTP/1.1" 200 36569
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+"GET /analytics/ HTTP/1.1" 200 36569
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 16
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1676
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 57
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Internal Server Error: /analytics/api/forecast/generate/
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 500 46
+Watching for file changes with StatReloader
+"GET /orders/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/orders/ HTTP/1.1" 200 7916
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/login/?next=/orders/ HTTP/1.1" 200 7928
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"GET /accounts/register/ HTTP/1.1" 200 13097
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/register/ HTTP/1.1" 302 0
+"GET /accounts/login/ HTTP/1.1" 200 8763
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"GET /accounts/register/ HTTP/1.1" 200 13097
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"POST /accounts/register/ HTTP/1.1" 302 0
+"GET /accounts/login/ HTTP/1.1" 200 8763
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+Watching for file changes with StatReloader
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /orders/ HTTP/1.1" 200 10563
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /inventory/medicines/ HTTP/1.1" 200 10566
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /orders/ HTTP/1.1" 200 10563
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47

@@ -41,10 +41,20 @@ class ARIMAForecastingService:
         """
         Prepare sales data for ARIMA forecasting
         """
-        if not start_date:
-            start_date = timezone.now() - timedelta(days=365)
-        if not end_date:
-            end_date = timezone.now()
+        if not start_date or not end_date:
+            # If no date range specified, find the actual range of available data
+            order_items = OrderItem.objects.filter(
+                medicine_id=medicine_id,
+                order__status__in=['confirmed', 'processing', 'shipped', 'delivered']
+            ).order_by('order__created_at')
+            
+            if not order_items.exists():
+                raise ValueError(f"No sales data found for medicine {medicine_id}")
+            
+            if not start_date:
+                start_date = order_items.first().order.created_at
+            if not end_date:
+                end_date = order_items.last().order.created_at
             
         # Get sales data from OrderItems
         order_items = OrderItem.objects.filter(
@@ -60,27 +70,39 @@ class ARIMAForecastingService:
         df = pd.DataFrame(list(order_items))
         df['order__created_at'] = pd.to_datetime(df['order__created_at'])
         
+        # Debug logging
+        logger.info(f"Prepared {len(df)} records for {period_type} forecasting")
+        logger.info(f"Date range: {df['order__created_at'].min()} to {df['order__created_at'].max()}")
+        
         # Group by period
         if period_type == 'daily':
             df = df.groupby(df['order__created_at'].dt.date)['quantity'].sum().reset_index()
             df.columns = ['date', 'quantity']
         elif period_type == 'weekly':
-            df['week'] = df['order__created_at'].dt.to_period('W')
-            df = df.groupby('week')['quantity'].sum().reset_index()
-            df['date'] = df['week'].dt.start_time.dt.date
+            # Create week start dates for grouping
+            df['week_start'] = df['order__created_at'].dt.to_period('W').dt.start_time
+            df = df.groupby('week_start')['quantity'].sum().reset_index()
+            df['date'] = df['week_start'].dt.date
             df = df[['date', 'quantity']]
         elif period_type == 'monthly':
-            df['month'] = df['order__created_at'].dt.to_period('M')
-            df = df.groupby('month')['quantity'].sum().reset_index()
-            df['date'] = df['month'].dt.start_time.dt.date
+            # Create month start dates for grouping
+            df['month_start'] = df['order__created_at'].dt.to_period('M').dt.start_time
+            df = df.groupby('month_start')['quantity'].sum().reset_index()
+            df['date'] = df['month_start'].dt.date
             df = df[['date', 'quantity']]
         else:
             raise ValueError("period_type must be 'daily', 'weekly', or 'monthly'")
         
         # Fill missing dates with 0
-        date_range = pd.date_range(start=df['date'].min(), end=df['date'].max(), freq='D' if period_type == 'daily' else 'W' if period_type == 'weekly' else 'M')
-        df = df.set_index('date').reindex(date_range.date, fill_value=0).reset_index()
-        df.columns = ['date', 'quantity']
+        try:
+            date_range = pd.date_range(start=df['date'].min(), end=df['date'].max(), freq='D' if period_type == 'daily' else 'W' if period_type == 'weekly' else 'M')
+            df = df.set_index('date').reindex(date_range.date, fill_value=0).reset_index()
+            df.columns = ['date', 'quantity']
+        except Exception as e:
+            logger.error(f"Error creating date range for {period_type}: {e}")
+            logger.error(f"DataFrame columns: {df.columns.tolist()}")
+            logger.error(f"DataFrame dtypes: {df.dtypes}")
+            raise ValueError(f"Error processing {period_type} data: {e}")
         
         return df
     
@@ -89,9 +111,15 @@ class ARIMAForecastingService:
         Find optimal ARIMA parameters using auto_arima
         """
         try:
+            # Clean data - remove NaN and infinite values
+            clean_data = data.dropna()
+            if len(clean_data) == 0:
+                logger.warning("No valid data points after cleaning, using fallback parameters")
+                return 1, 1, 1
+            
             # Use auto_arima to find best parameters
             model = auto_arima(
-                data,
+                clean_data,
                 start_p=0, start_q=0,
                 max_p=5, max_q=5,
                 seasonal=False,
@@ -101,7 +129,18 @@ class ARIMAForecastingService:
                 trace=False
             )
             
-            return model.order[0], model.order[1], model.order[2]  # p, d, q
+            # Safely extract parameters and handle NaN values
+            p = int(model.order[0]) if not pd.isna(model.order[0]) else 1
+            d = int(model.order[1]) if not pd.isna(model.order[1]) else 1
+            q = int(model.order[2]) if not pd.isna(model.order[2]) else 1
+            
+            # Ensure parameters are non-negative
+            p = max(0, p)
+            d = max(0, d)
+            q = max(0, q)
+            
+            logger.info(f"ARIMA parameters found: p={p}, d={d}, q={q}")
+            return p, d, q
             
         except Exception as e:
             logger.error(f"Error finding ARIMA parameters: {e}")
@@ -166,6 +205,18 @@ class ARIMAForecastingService:
             # Prepare time series data
             ts_data = sales_data.set_index('date')['quantity']
             
+            # Clean data - remove NaN and infinite values
+            ts_data = ts_data.dropna()
+            if len(ts_data) == 0:
+                raise ValueError("No valid data points after cleaning NaN values")
+            
+            # Ensure all values are finite
+            ts_data = ts_data[np.isfinite(ts_data)]
+            if len(ts_data) == 0:
+                raise ValueError("No finite data points available for forecasting")
+            
+            logger.info(f"Cleaned time series data: {len(ts_data)} points, range: {ts_data.min():.2f} to {ts_data.max():.2f}")
+            
             # Find optimal ARIMA parameters
             p, d, q = self.find_optimal_arima_params(ts_data)
             
@@ -178,11 +229,17 @@ class ARIMAForecastingService:
             forecast_result = fitted_model.forecast(steps=forecast_horizon)
             forecast_values = forecast_result.values.tolist()
             
+            # Handle NaN values in forecast
+            forecast_values = [0.0 if pd.isna(val) or not np.isfinite(val) else float(val) for val in forecast_values]
+            
             # Calculate confidence intervals
             conf_int = fitted_model.get_forecast(steps=forecast_horizon).conf_int()
+            lower_bounds = [0.0 if pd.isna(val) or not np.isfinite(val) else float(val) for val in conf_int.iloc[:, 0].values]
+            upper_bounds = [0.0 if pd.isna(val) or not np.isfinite(val) else float(val) for val in conf_int.iloc[:, 1].values]
+            
             confidence_intervals = {
-                'lower': conf_int.iloc[:, 0].values.tolist(),
-                'upper': conf_int.iloc[:, 1].values.tolist()
+                'lower': lower_bounds,
+                'upper': upper_bounds
             }
             
             # Calculate model metrics using in-sample predictions

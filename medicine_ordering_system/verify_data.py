@@ -33,7 +33,11 @@ def main():
     # Get date range
     first_order = paracetamol_orders.order_by('created_at').first()
     last_order = paracetamol_orders.order_by('created_at').last()
-    print(f'Date Range: {first_order.created_at.date()} to {last_order.created_at.date()}')
+    
+    if first_order and last_order:
+        print(f'Date Range: {first_order.created_at.date()} to {last_order.created_at.date()}')
+    else:
+        print('Date Range: No orders found')
     print()
 
     # Count order items
@@ -53,23 +57,29 @@ def main():
     order_dates = [order.created_at.date() for order in paracetamol_orders.order_by('created_at')]
     unique_dates = sorted(set(order_dates))
     
-    print(f'Days with sales data: {len(unique_dates)}')
-    print(f'First sale date: {min(unique_dates)}')
-    print(f'Last sale date: {max(unique_dates)}')
-    
-    # Check for major gaps (more than 7 days without sales)
-    gaps = []
-    for i in range(len(unique_dates) - 1):
-        gap_days = (unique_dates[i+1] - unique_dates[i]).days
-        if gap_days > 7:
-            gaps.append((unique_dates[i], unique_dates[i+1], gap_days))
-    
-    if gaps:
-        print(f'⚠️  Found {len(gaps)} gaps longer than 7 days:')
-        for start, end, days in gaps:
-            print(f'   Gap: {start} to {end} ({days} days)')
+    if unique_dates:
+        print(f'Days with sales data: {len(unique_dates)}')
+        print(f'First sale date: {min(unique_dates)}')
+        print(f'Last sale date: {max(unique_dates)}')
+        
+        # Check for major gaps (more than 7 days without sales)
+        gaps = []
+        for i in range(len(unique_dates) - 1):
+            gap_days = (unique_dates[i+1] - unique_dates[i]).days
+            if gap_days > 7:
+                gaps.append((unique_dates[i], unique_dates[i+1], gap_days))
+        
+        if gaps:
+            print(f'⚠️  Found {len(gaps)} gaps longer than 7 days:')
+            for start, end, days in gaps:
+                print(f'   Gap: {start} to {end} ({days} days)')
+        else:
+            print('✅ No major gaps found in sales data')
     else:
-        print('✅ No major gaps found in sales data')
+        print('Days with sales data: 0')
+        print('First sale date: No data')
+        print('Last sale date: No data')
+        gaps = []
     
     print()
 
@@ -99,22 +109,32 @@ def main():
     
     # 6+ months of data
     min_months = 6
-    date_range = (max(unique_dates) - min(unique_dates)).days
-    actual_months = date_range / 30.44  # Average days per month
-    print(f'6+ months of data: {actual_months:.1f} months >= {min_months} = {"✅ PASS" if actual_months >= min_months else "❌ FAIL"}')
-    
-    # Consistent data without major gaps
-    consistent_data = len(gaps) == 0
-    print(f'Consistent data without major gaps: {"✅ PASS" if consistent_data else "❌ FAIL"}')
-    
-    # Full seasonal cycles
-    months_with_data = len(set(date.month for date in unique_dates))
-    seasonal_cycles = months_with_data >= 12
-    print(f'Full seasonal cycles: {months_with_data} months >= 12 = {"✅ PASS" if seasonal_cycles else "❌ FAIL"}')
-    
-    # Data from 2020
-    data_from_2020 = min(unique_dates).year == 2020
-    print(f'Data from 2020: {min(unique_dates).year} == 2020 = {"✅ PASS" if data_from_2020 else "❌ FAIL"}')
+    if unique_dates:
+        date_range = (max(unique_dates) - min(unique_dates)).days
+        actual_months = date_range / 30.44  # Average days per month
+        print(f'6+ months of data: {actual_months:.1f} months >= {min_months} = {"✅ PASS" if actual_months >= min_months else "❌ FAIL"}')
+        
+        # Consistent data without major gaps
+        consistent_data = len(gaps) == 0
+        print(f'Consistent data without major gaps: {"✅ PASS" if consistent_data else "❌ FAIL"}')
+        
+        # Full seasonal cycles
+        months_with_data = len(set(date.month for date in unique_dates))
+        seasonal_cycles = months_with_data >= 12
+        print(f'Full seasonal cycles: {months_with_data} months >= 12 = {"✅ PASS" if seasonal_cycles else "❌ FAIL"}')
+        
+        # Data from 2020
+        data_from_2020 = min(unique_dates).year == 2020
+        print(f'Data from 2020: {min(unique_dates).year} == 2020 = {"✅ PASS" if data_from_2020 else "❌ FAIL"}')
+    else:
+        print('6+ months of data: No data available = ❌ FAIL')
+        print('Consistent data without major gaps: No data available = ❌ FAIL')
+        print('Full seasonal cycles: No data available = ❌ FAIL')
+        print('Data from 2020: No data available = ❌ FAIL')
+        actual_months = 0
+        consistent_data = False
+        seasonal_cycles = False
+        data_from_2020 = False
     
     print()
     
@@ -139,10 +159,20 @@ def main():
     print(f'Total Orders: {actual_records}')
     print(f'Total Quantity: {total_quantity} units')
     print(f'Total Revenue: ${total_revenue:.2f}')
-    print(f'Average Order Value: ${total_revenue/actual_records:.2f}')
-    print(f'Average Quantity per Order: {total_quantity/actual_records:.1f} units')
-    print(f'Data Span: {date_range} days ({actual_months:.1f} months)')
-    print(f'Unique Sales Days: {len(unique_dates)}')
+    
+    if actual_records > 0:
+        print(f'Average Order Value: ${total_revenue/actual_records:.2f}')
+        print(f'Average Quantity per Order: {total_quantity/actual_records:.1f} units')
+    else:
+        print('Average Order Value: No data available')
+        print('Average Quantity per Order: No data available')
+    
+    if unique_dates:
+        print(f'Data Span: {date_range} days ({actual_months:.1f} months)')
+        print(f'Unique Sales Days: {len(unique_dates)}')
+    else:
+        print('Data Span: No data available')
+        print('Unique Sales Days: 0')
 
 if __name__ == "__main__":
     main()
