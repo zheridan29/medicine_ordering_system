@@ -5338,3 +5338,10 @@ Watching for file changes with StatReloader
 "GET /orders/ HTTP/1.1" 200 10563
 "GET /common/api/notifications/ HTTP/1.1" 200 21
 "GET /orders/api/cart/ HTTP/1.1" 200 47
+Watching for file changes with StatReloader
+"GET /orders/ HTTP/1.1" 200 10563
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47
+"GET /inventory/medicines/ HTTP/1.1" 200 24547
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 200 47

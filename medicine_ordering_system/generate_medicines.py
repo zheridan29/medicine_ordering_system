@@ -292,13 +292,17 @@ def generate_medicines():
         medicines_created += 1
         print(f"  ✅ Created medicine: {med_data['name']}")
         
-        # Create initial stock movement (stock in)
+        # Create initial stock movement (stock in) - get next available ID
+        cursor.execute("SELECT MAX(id) FROM inventory_stockmovement")
+        max_id = cursor.fetchone()[0] or 0
+        next_id = max_id + 1
+        
         cursor.execute("""
             INSERT INTO inventory_stockmovement (
                 id, medicine_id, movement_type, quantity, reference_number, notes, created_by_id, created_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            i,
+            next_id,
             i,
             'in',
             med_data['current_stock'],
@@ -317,12 +321,17 @@ def generate_medicines():
             if movement_type == 'out':
                 quantity = -quantity
             
+            # Get next available ID
+            cursor.execute("SELECT MAX(id) FROM inventory_stockmovement")
+            max_id = cursor.fetchone()[0] or 0
+            next_id = max_id + 1
+            
             cursor.execute("""
                 INSERT INTO inventory_stockmovement (
                     id, medicine_id, movement_type, quantity, reference_number, notes, created_by_id, created_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                stock_movements_created + 1,
+                next_id,
                 i,
                 movement_type,
                 quantity,
@@ -365,12 +374,17 @@ def generate_medicines():
             if movement_type in ['out', 'damage']:
                 quantity = -quantity
             
+            # Get next available ID
+            cursor.execute("SELECT MAX(id) FROM inventory_stockmovement")
+            max_id = cursor.fetchone()[0] or 0
+            next_id = max_id + 1
+            
             cursor.execute("""
                 INSERT INTO inventory_stockmovement (
                     id, medicine_id, movement_type, quantity, reference_number, notes, created_by_id, created_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                stock_movements_created + 1,
+                next_id,
                 medicine_id,
                 movement_type,
                 quantity,
