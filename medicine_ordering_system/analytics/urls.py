@@ -6,6 +6,7 @@ app_name = 'analytics'
 urlpatterns = [
     # Dashboard views
     path('', views.AnalyticsDashboardView.as_view(), name='dashboard'),
+    path('forecast-only/', views.ForecastOnlyView.as_view(), name='forecast_only'),
     path('model-evaluation/', views.ModelEvaluationView.as_view(), name='model_evaluation'),
     
     # API endpoints
@@ -20,4 +21,5 @@ urlpatterns = [
     path('api/forecast/extend/', api_views.extend_forecast, name='api_extend_forecast'),
     path('api/model-evaluation/', api_views.get_model_evaluation_data, name='api_model_evaluation'),
     path('api/forecast/<int:forecast_id>/details/', api_views.get_forecast_details, name='api_forecast_details'),
+    path('api/forecast/<int:forecast_id>/delete/', api_views.delete_forecast, name='api_delete_forecast'),
 ]

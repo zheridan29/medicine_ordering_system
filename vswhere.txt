@@ -19,3 +19,39 @@ then, install requirements (before isntall make sure, build tools is installed)
 THE LIMIT OF THE SYSTEM
 
 ordering system only, payments is handled manually between sales rep and the company (customer and company through the sales rep)
+
+
+Analyze the whole system. Create a transactions for the amoxicillin with user sales rep as ace wherein the transactions are created and completed at the same time spanning from 2012-2024
+
+
+Forecast Data Requirements
+Minimum Data Points: At least 30 sales records
+Time Period: Preferably 6+ months of sales history
+Data Quality: Consistent sales data without major gaps
+Seasonality: Full seasonal cycles for better accuracy
+
+
+create the users:
+
+first name = ace
+last name = gutie
+username = ace
+email = ace@gmail.com
+account type/role = Sales Representative
+password = z3rr3Itug
+
+first name = zheridan
+last name = gutie
+username = zheridan
+email = zheridan@gmail.com
+account type/role = Pharmacist/Admin
+password = z3rr3Itug
+
+first name = System
+last name = Administrator
+username = admin
+email = admin@oncare.com
+account type/role = admin
+password = admin123
+
+

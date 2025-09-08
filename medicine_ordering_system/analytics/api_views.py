@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 from datetime import timedelta
+import time
+import sqlite3
 
 from .models import DemandForecast, InventoryOptimization, SalesTrend, CustomerAnalytics, SystemMetrics
 from .services import ARIMAForecastingService, SupplyChainOptimizer
@@ -37,43 +39,89 @@ def generate_forecast(request):
                 status=status.HTTP_403_FORBIDDEN
             )
         
-        # Generate forecast
+        # Generate forecast with retry logic
         forecasting_service = ARIMAForecastingService()
         
-        try:
-            forecast = forecasting_service.generate_forecast(
-                medicine_id, forecast_period, forecast_horizon
-            )
-            
-            # Generate inventory optimization
-            optimization = forecasting_service.optimize_inventory_levels(forecast)
-            
-        except ValueError as e:
-            if "Insufficient data points" in str(e):
-                # Get medicine name for better error message
-                try:
-                    medicine = Medicine.objects.get(id=medicine_id)
-                    medicine_name = medicine.name
-                except Medicine.DoesNotExist:
-                    medicine_name = f"Medicine ID {medicine_id}"
+        max_retries = 3
+        forecast = None
+        for attempt in range(max_retries):
+            try:
+                forecast = forecasting_service.generate_forecast(
+                    medicine_id, forecast_period, forecast_horizon
+                )
+                break  # Success, exit retry loop
+            except (sqlite3.OperationalError, sqlite3.DatabaseError) as e:
+                if "database is locked" in str(e).lower() and attempt < max_retries - 1:
+                    time.sleep(1)  # Wait 1 second before retry
+                    continue
+                else:
+                    raise e
+        
+        if forecast:
+            try:
+                # Generate inventory optimization
+                optimization = forecasting_service.optimize_inventory_levels(forecast)
+            except ValueError as e:
+                if "Insufficient data points" in str(e):
+                    # Get medicine name for better error message
+                    try:
+                        medicine = Medicine.objects.get(id=medicine_id)
+                        medicine_name = medicine.name
+                    except Medicine.DoesNotExist:
+                        medicine_name = f"Medicine ID {medicine_id}"
                 
-                error_response = {
-                    'error': 'insufficient_data',
-                    'message': f'Insufficient sales data for {medicine_name}. Need at least 30 data points for accurate forecasting.',
-                    'medicine_name': medicine_name,
-                    'required_data_points': 30,
-                    'suggestion': 'Please ensure the medicine has sufficient sales history before generating forecasts.'
-                }
-                
-                return Response(error_response, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                raise e
+                    error_response = {
+                        'error': 'insufficient_data',
+                        'message': f'Insufficient sales data for {medicine_name}. Need at least 30 data points for accurate forecasting.',
+                        'medicine_name': medicine_name,
+                        'required_data_points': 30,
+                        'suggestion': 'Please ensure the medicine has sufficient sales history before generating forecasts.'
+                    }
+                    
+                    return Response(error_response, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    raise e
+        
+        # Generate forecast date labels for immediate display
+        from datetime import datetime, timedelta
+        import pandas as pd
+        
+        # Get historical data to determine last date
+        historical_data = forecasting_service.prepare_sales_data(
+            medicine_id, forecast_period
+        )
+        last_historical_date = pd.to_datetime(historical_data['date'].iloc[-1])
+        
+        # Generate forecast period labels
+        forecast_labels = []
+        if forecast_period == 'daily':
+            for i in range(1, forecast_horizon + 1):
+                forecast_date = last_historical_date + timedelta(days=i)
+                forecast_labels.append(forecast_date.strftime('%b %d, %Y'))
+        elif forecast_period == 'weekly':
+            for i in range(1, forecast_horizon + 1):
+                forecast_date = last_historical_date + timedelta(weeks=i)
+                forecast_labels.append(f"Week of {forecast_date.strftime('%b %d, %Y')}")
+        elif forecast_period == 'monthly':
+            for i in range(1, forecast_horizon + 1):
+                forecast_date = last_historical_date + timedelta(days=i*30)  # Approximate month
+                forecast_labels.append(forecast_date.strftime('%b %Y'))
+        
+        # Generate historical labels
+        historical_labels = [d.strftime('%b %d, %Y') if hasattr(d, 'strftime') else str(d) for d in historical_data['date']]
+        all_labels = historical_labels + forecast_labels
         
         return Response({
             'forecast_id': forecast.id,
             'medicine_name': forecast.medicine.name,
             'forecasted_demand': forecast.forecasted_demand,
             'confidence_intervals': forecast.confidence_intervals,
+            'labels': all_labels,
+            'forecast_labels': forecast_labels,
+            'historical_data': {
+                'values': historical_data['quantity'].tolist(),
+                'labels': historical_labels
+            },
             'model_metrics': {
                 'aic': forecast.aic,
                 'bic': forecast.bic,
@@ -121,15 +169,43 @@ def get_forecast_data(request, forecast_id):
             forecast.forecast_period
         )
         
+        # Generate forecast date labels
+        from datetime import datetime, timedelta
+        import pandas as pd
+        
+        # Get the last historical date
+        last_historical_date = pd.to_datetime(historical_data['date'].iloc[-1])
+        
+        # Generate forecast period labels based on forecast_period
+        forecast_labels = []
+        if forecast.forecast_period == 'daily':
+            for i in range(1, forecast.forecast_horizon + 1):
+                forecast_date = last_historical_date + timedelta(days=i)
+                forecast_labels.append(forecast_date.strftime('%b %d, %Y'))
+        elif forecast.forecast_period == 'weekly':
+            for i in range(1, forecast.forecast_horizon + 1):
+                forecast_date = last_historical_date + timedelta(weeks=i)
+                forecast_labels.append(f"Week of {forecast_date.strftime('%b %d, %Y')}")
+        elif forecast.forecast_period == 'monthly':
+            for i in range(1, forecast.forecast_horizon + 1):
+                forecast_date = last_historical_date + timedelta(days=i*30)  # Approximate month
+                forecast_labels.append(forecast_date.strftime('%b %Y'))
+        
+        # Combine historical and forecast labels
+        historical_labels = [d.strftime('%b %d, %Y') if hasattr(d, 'strftime') else str(d) for d in historical_data['date']]
+        all_labels = historical_labels + forecast_labels
+        
         # Prepare data for visualization
         chart_data = {
+            'labels': all_labels,
             'historical': {
                 'dates': [str(d) for d in historical_data['date']],
                 'values': historical_data['quantity'].tolist()
             },
             'forecast': {
                 'values': forecast.forecasted_demand,
-                'confidence_intervals': forecast.confidence_intervals
+                'confidence_intervals': forecast.confidence_intervals,
+                'labels': forecast_labels
             },
             'model_info': {
                 'arima_params': f"ARIMA({forecast.arima_p},{forecast.arima_d},{forecast.arima_q})",
@@ -499,11 +575,58 @@ def extend_forecast(request):
             else:
                 raise e
         
+        # Get the extended forecast data for the chart
+        # We need to manually create the chart data since we can't call the API view directly
+        historical_data = forecasting_service.prepare_sales_data(
+            extended_forecast.medicine.id, 
+            extend_period
+        )
+        
+        # Generate forecast date labels
+        from datetime import datetime, timedelta
+        import pandas as pd
+        
+        # Get the last historical date
+        last_historical_date = pd.to_datetime(historical_data['date'].iloc[-1])
+        
+        # Generate forecast period labels based on forecast_period
+        forecast_labels = []
+        if extend_period == 'daily':
+            for i in range(1, new_horizon + 1):
+                forecast_date = last_historical_date + timedelta(days=i)
+                forecast_labels.append(forecast_date.strftime('%b %d, %Y'))
+        elif extend_period == 'weekly':
+            for i in range(1, new_horizon + 1):
+                forecast_date = last_historical_date + timedelta(weeks=i)
+                forecast_labels.append(f"Week of {forecast_date.strftime('%b %d, %Y')}")
+        elif extend_period == 'monthly':
+            for i in range(1, new_horizon + 1):
+                forecast_date = last_historical_date + timedelta(days=i*30)  # Approximate month
+                forecast_labels.append(forecast_date.strftime('%b %Y'))
+        
+        # Combine historical and forecast labels
+        historical_labels = [d.strftime('%b %d, %Y') if hasattr(d, 'strftime') else str(d) for d in historical_data['date']]
+        all_labels = historical_labels + forecast_labels
+        
+        # Prepare data for visualization (matching updateDemandForecastChart structure)
+        forecast_data = {
+            'labels': all_labels,
+            'historical': {
+                'values': historical_data['quantity'].tolist()
+            },
+            'forecast': {
+                'values': extended_forecast.forecasted_demand,
+                'labels': forecast_labels
+            },
+            'medicine_name': extended_forecast.medicine.name
+        }
+        
         return Response({
             'forecast_id': extended_forecast.id,
             'new_horizon': new_horizon,
             'extended_periods': extend_horizon,
-            'message': f'Forecast extended successfully by {extend_horizon} {extend_period} periods'
+            'message': f'Forecast extended successfully by {extend_horizon} {extend_period} periods',
+            'forecast_data': forecast_data
         })
         
     except Exception as e:
@@ -562,6 +685,53 @@ def get_model_evaluation_data(request):
             'performance_distribution': performance_distribution,
             'medicine_performance': medicine_performance,
             'recent_forecasts': recent_forecasts,
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_forecast(request, forecast_id):
+    """
+    Delete a specific forecast
+    """
+    try:
+        # Check permissions
+        if not (request.user.is_admin or request.user.is_pharmacist_admin):
+            return Response(
+                {'error': 'Permission denied'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get the forecast
+        try:
+            forecast = DemandForecast.objects.get(id=forecast_id)
+        except DemandForecast.DoesNotExist:
+            return Response(
+                {'error': 'Forecast not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Store forecast info for response
+        forecast_info = {
+            'id': forecast.id,
+            'medicine_name': forecast.medicine.name,
+            'forecast_period': forecast.forecast_period,
+            'created_at': forecast.created_at.isoformat()
+        }
+        
+        # Delete the forecast
+        forecast.delete()
+        
+        return Response({
+            'success': True,
+            'message': f'Forecast for {forecast_info["medicine_name"]} deleted successfully',
+            'deleted_forecast': forecast_info
         })
         
     except Exception as e:

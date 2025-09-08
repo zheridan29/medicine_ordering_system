@@ -80,6 +80,7 @@
 {% endblock %}
 
 {% block content %}
+{% csrf_token %}
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -335,9 +336,14 @@
                                 </span>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary" onclick="viewForecastDetails({{ forecast.id }})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewForecastDetails({{ forecast.id }})" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteForecast({{ forecast.id }}, '{{ forecast.medicine.name }}')" title="Delete Forecast">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         {% empty %}
@@ -356,6 +362,95 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+// Include delete functionality
+function deleteForecast(forecastId, medicineName) {
+    // Show confirmation dialog
+    if (confirm(`Are you sure you want to delete the forecast for ${medicineName}?\n\nThis action cannot be undone.`)) {
+        // Show loading state
+        const deleteBtn = event.target.closest('button');
+        const originalContent = deleteBtn.innerHTML;
+        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        deleteBtn.disabled = true;
+        
+        // Get CSRF token with fallback methods
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val() || 
+                         $('meta[name=csrf-token]').attr('content') ||
+                         $('input[name=csrfmiddlewaretoken]').val();
+        
+        console.log('CSRF Token:', csrfToken ? 'Found' : 'Not found');
+        console.log('Deleting forecast ID:', forecastId);
+        
+        $.ajax({
+            url: `/analytics/api/forecast/${forecastId}/delete/`,
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            success: function(response) {
+                // Show success message
+                showAlert('success', response.message);
+                
+                // Remove the row from the table with animation
+                const row = deleteBtn.closest('tr');
+                row.fadeOut(300, function() {
+                    $(this).remove();
+                    
+                    // Check if table is empty and add empty message if needed
+                    const remainingRows = $('tbody tr').length;
+                    if (remainingRows === 0) {
+                        $('tbody').append(`
+                            <tr>
+                                <td colspan="10" class="text-center text-muted">No forecasts available</td>
+                            </tr>
+                        `);
+                    }
+                });
+                
+                // Reset button state
+                deleteBtn.innerHTML = originalContent;
+                deleteBtn.disabled = false;
+            },
+            error: function(xhr) {
+                const response = xhr.responseJSON;
+                showAlert('error', 'Error deleting forecast: ' + (response?.error || 'Unknown error'));
+                
+                // Reset button state
+                deleteBtn.innerHTML = originalContent;
+                deleteBtn.disabled = false;
+            }
+        });
+    }
+}
+
+function viewForecastDetails(forecastId) {
+    // Show forecast details modal or navigate to details page
+    showAlert('info', `Viewing details for forecast ID: ${forecastId}`);
+    // TODO: Implement detailed forecast view
+}
+
+function showAlert(type, message) {
+    const alertClass = type === 'success' ? 'alert-success' : 
+                     type === 'warning' ? 'alert-warning' : 'alert-danger';
+    
+    const alertHtml = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    // Remove existing alerts
+    $('.alert').remove();
+    
+    // Add new alert
+    $('.row').first().before(alertHtml);
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+        $('.alert').fadeOut();
+    }, 5000);
+}
 $(document).ready(function() {
     loadQualityDistributionChart();
     loadPeriodPerformanceChart();
@@ -448,8 +543,43 @@ function loadPerformanceOverTimeChart() {
     const ctx = document.getElementById('performanceOverTimeChart').getContext('2d');
     
     const dailyData = {{ daily_performance|safe }};
+    console.log('Daily performance data:', dailyData);
+    
     const dates = Object.keys(dailyData).sort();
+    console.log('Dates:', dates);
+    
+    if (dates.length === 0) {
+        console.log('No performance data available, showing empty chart');
+        // Show empty chart with message
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['No Data'],
+                datasets: [{
+                    label: 'No Performance Data Available',
+                    data: [0],
+                    borderColor: 'rgba(200, 200, 200, 1)',
+                    backgroundColor: 'rgba(200, 200, 200, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'No Performance Data Available'
+                    }
+                }
+            }
+        });
+        return;
+    }
+    
     const mapeValues = dates.map(date => dailyData[date].avg_mape);
+    console.log('MAPE values:', mapeValues);
     
     new Chart(ctx, {
         type: 'line',
@@ -502,24 +632,5 @@ function refreshModelData() {
     location.reload();
 }
 
-function showAlert(type, message) {
-    const alertHtml = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    `;
-    
-    // Remove existing alerts
-    $('.alert').remove();
-    
-    // Add new alert
-    $('.row:first').before(alertHtml);
-    
-    // Auto-dismiss after 5 seconds
-    setTimeout(function() {
-        $('.alert').fadeOut();
-    }, 5000);
-}
 </script>
 {% endblock %}
