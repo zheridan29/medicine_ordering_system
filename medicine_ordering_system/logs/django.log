@@ -6778,3 +6778,891 @@ Forbidden: /orders/api/cart/
 Forbidden: /orders/api/cart/
 "GET /orders/api/cart/ HTTP/1.1" 403 67
 "GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 47451
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 65634
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 1723
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/forecast-only/ HTTP/1.1" 200 21575
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 22768
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\api_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\api_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /analytics/forecast-only/ HTTP/1.1" 200 23127
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Bad Request: /analytics/api/forecast/generate-on-demand/
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 400 46
+Bad Request: /analytics/api/forecast/generate-on-demand/
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 400 46
+Bad Request: /analytics/api/forecast/generate-on-demand/
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 400 46
+Bad Request: /analytics/api/forecast/generate-on-demand/
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 400 46
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 20487
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 5278
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 134949
+"GET /analytics/forecast-only/ HTTP/1.1" 200 23127
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 58764
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /inventory/ HTTP/1.1" 200 12696
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/analytics/ HTTP/1.1" 200 7916
+"GET /static/css/custom.css HTTP/1.1" 200 7627
+"GET /static/js/common.js HTTP/1.1" 200 12581
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+Not Found: /favicon.ico
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"GET /favicon.ico HTTP/1.1" 404 3941
+"POST /accounts/login/?next=/analytics/ HTTP/1.1" 302 0
+"GET /oncare-admin/ HTTP/1.1" 200 15448
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 66703
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 2231
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/ HTTP/1.1" 200 65623
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 2231
+"GET /analytics/ HTTP/1.1" 200 66703
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 2231
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/forecast-only/ HTTP/1.1" 200 24190
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 52459
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/forecast-only/ HTTP/1.1" 200 23127
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /inventory/ HTTP/1.1" 200 12696
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 65623
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 2231
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/forecast-only/ HTTP/1.1" 200 23127
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 58764
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/dashboard/ HTTP/1.1" 200 30533
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /inventory/ HTTP/1.1" 200 12696
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /inventory/stock-movements/create/ HTTP/1.1" 200 9206
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 58764
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 58764
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 25128
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\orders\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\orders\views.py changed, reloading.
+Watching for file changes with StatReloader
+Bad Request: /analytics/api/forecast/generate-on-demand/
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 400 46
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 5337
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 20744
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\orders\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 71186
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/orders/?status=&payment_status=&medicine=3&search= HTTP/1.1" 200 12047
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /orders/pharmacist/orders/?status=&payment_status=&medicine=4&search= HTTP/1.1" 200 71216
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 25128
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 71186
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /orders/pharmacist/orders/?status=&payment_status=&medicine=3&search= HTTP/1.1" 200 71381
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /orders/pharmacist/orders/?status=&payment_status=&medicine=4&search= HTTP/1.1" 200 71216
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 25128
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 4951
+"GET /analytics/forecast-only/ HTTP/1.1" 200 25128
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 4834
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 121301
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/forecast-only/ HTTP/1.1" 200 26310
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 61227
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 26675
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/forecast-only/ HTTP/1.1" 200 26917
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 4834
+"GET /analytics/forecast-only/ HTTP/1.1" 200 36545
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+- Broken pipe from ('127.0.0.1', 59897)
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 37291
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 42386
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 41780
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 61217
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 41780
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /inventory/ HTTP/1.1" 200 12696
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 65641
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3430
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 61217
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"POST /analytics/api/forecast/extend/ HTTP/1.1" 200 10951
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3431
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3431
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/ HTTP/1.1" 200 73866
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3431
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /inventory/ HTTP/1.1" 200 12696
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 41780
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /inventory/ HTTP/1.1" 200 12696
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 41780
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 61217
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 73866
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3431
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/ HTTP/1.1" 200 65641
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3431
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"POST /analytics/api/forecast/generate/ HTTP/1.1" 200 18725
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3432
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3432
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/forecast-only/ HTTP/1.1" 200 41780
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 44426
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 44843
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 44843
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 41659
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/forecast-only/ HTTP/1.1" 200 31097
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/forecast-only/ HTTP/1.1" 200 35378
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/forecast-only/ HTTP/1.1" 200 35257
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/ HTTP/1.1" 200 66719
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3424
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/forecast-only/ HTTP/1.1" 200 36671
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 37284
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 37989
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 37989
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 38436
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 38436
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 20487
+"GET /analytics/forecast-only/ HTTP/1.1" 200 37373
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/forecast-only/ HTTP/1.1" 200 38454
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 39655
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Bad Request: /analytics/api/forecast/generate-on-demand/
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 400 46
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 20487
+"GET /analytics/forecast-only/ HTTP/1.1" 200 42319
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 45695
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 20487
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/ HTTP/1.1" 200 66707
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3413
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/forecast-only/ HTTP/1.1" 200 44632
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /orders/pharmacist/orders/ HTTP/1.1" 200 71186
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/pharmacist/orders/?status=&payment_status=&medicine=3&search= HTTP/1.1" 200 71381
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /orders/pharmacist/orders/?status=&payment_status=&medicine=4&search= HTTP/1.1" 200 71216
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 44632
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 20847
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 20847
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Watching for file changes with StatReloader
+"GET /analytics/forecast-only/ HTTP/1.1" 200 20847
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 20847
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 29779
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 29779
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 29779
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 29779
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 29779
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 29779
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/forecast-only/ HTTP/1.1" 200 29779
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/forecast-only/ HTTP/1.1" 200 33593
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/forecast-only/ HTTP/1.1" 200 29329
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/forecast-only/ HTTP/1.1" 200 33593
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 27556
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 28494
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 31714
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 32820
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 33973
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+"GET /analytics/forecast-only/ HTTP/1.1" 200 33970
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18719
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\api_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\venv\Lib\site-packages\django\http\request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+"GET /analytics/forecast-only/ HTTP/1.1" 200 37985
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /analytics/api/forecast/generate-on-demand/ HTTP/1.1" 200 18720
+"GET /inventory/ HTTP/1.1" 200 12696
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 65652
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3454
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /inventory/ HTTP/1.1" 200 12696
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/forecast-only/ HTTP/1.1" 200 37985
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+- Broken pipe from ('127.0.0.1', 54519)
+"GET /analytics/api/forecast/best-auto/ HTTP/1.1" 200 20783
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\api_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\api_views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /analytics/api/forecast/best-auto/
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\api_views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /analytics/forecast-only/ HTTP/1.1" 200 40730
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/forecast/best-auto/?medicine_id=3 HTTP/1.1" 200 19014
+"GET /analytics/api/forecast/best-auto/?medicine_id=4 HTTP/1.1" 200 20783
+Not Found: /analytics/api/forecast/best-auto/
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 60985
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 60995
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+- Broken pipe from ('127.0.0.1', 55109)
+"GET /accounts/logout/confirm/ HTTP/1.1" 200 9133
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /static/js/common.js HTTP/1.1" 304 0
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /accounts/login/?next=/ HTTP/1.1" 200 8817
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /orders/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/orders/ HTTP/1.1" 200 7916
+"GET /static/css/custom.css HTTP/1.1" 200 7627
+"GET /static/js/common.js HTTP/1.1" 200 12581
+"GET /common/api/notifications/ HTTP/1.1" 302 0
+Forbidden: /orders/api/cart/
+"GET /accounts/login/?next=/common/api/notifications/ HTTP/1.1" 200 7916
+"GET /orders/api/cart/ HTTP/1.1" 403 58
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3941
+"POST /accounts/login/?next=/orders/ HTTP/1.1" 302 0
+"GET /oncare-admin/ HTTP/1.1" 200 15448
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 66739
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3454
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/model-evaluation/ HTTP/1.1" 200 61844
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/ HTTP/1.1" 200 66739
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/system-metrics/ HTTP/1.1" 200 142
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/api/forecasts/ HTTP/1.1" 200 3454
+"GET /inventory/api/medicines/ HTTP/1.1" 200 1336
+"GET /analytics/arima-demonstration HTTP/1.1" 301 0
+"GET /analytics/arima-demonstration/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3735
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"POST /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3903
+"POST /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3903
+"GET /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3735
+"GET /analytics/forecast-only/ HTTP/1.1" 200 42117
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /oncare-admin/ HTTP/1.1" 200 15772
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/arima-demonstration/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3735
+"POST /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3903
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3735
+"GET /analytics/arima-demonstration/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3735
+"POST /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3903
+"GET /admin/login/?next=/analytics/arima-demonstration/ HTTP/1.1" 200 3735
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /oncare-admin/ HTTP/1.1" 200 15772
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/arima-demonstration/ HTTP/1.1" 200 31588
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-analysis/?medicine_id=4&period_type=monthly HTTP/1.1" 200 795223
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\step_analysis.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /analytics/arima-demonstration/ HTTP/1.1" 200 31832
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/arima-step-by-step/ HTTP/1.1" 200 26046
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=1 HTTP/1.1" 200 495010
+"GET /analytics/arima-step-by-step/?step=2&medicine_id=4&period_type=monthly HTTP/1.1" 200 26046
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=2 HTTP/1.1" 200 929464
+"GET /analytics/arima-step-by-step/?step=3&medicine_id=4&period_type=monthly HTTP/1.1" 200 26046
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=3 HTTP/1.1" 200 496625
+"GET /analytics/arima-step-by-step/?step=4&medicine_id=4&period_type=monthly HTTP/1.1" 200 26046
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=4 HTTP/1.1" 200 821923
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /analytics/arima-step-by-step/?step=4&medicine_id=4&period_type=monthly HTTP/1.1" 200 27835
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/arima-step-by-step/?step=1&medicine_id=4 HTTP/1.1" 200 27835
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=4 HTTP/1.1" 200 821923
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=1 HTTP/1.1" 200 495010
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/arima-step-by-step/?step=2&medicine_id=4 HTTP/1.1" 200 27835
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=2 HTTP/1.1" 200 929464
+"GET /analytics/arima-step-by-step/?step=3&medicine_id=4 HTTP/1.1" 200 27835
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=3 HTTP/1.1" 200 496625
+"GET /analytics/arima-step-by-step/?step=3&medicine_id=4 HTTP/1.1" 200 29987
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=3 HTTP/1.1" 200 496625
+"GET /analytics/arima-step-by-step/?step=4&medicine_id=4 HTTP/1.1" 200 29987
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=4 HTTP/1.1" 200 821923
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+"GET /analytics/arima-step-by-step/?step=4&medicine_id=4 HTTP/1.1" 200 31349
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4052
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=4 HTTP/1.1" 200 821923
+"GET /analytics/arima-step-by-step/?step=4&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=4 HTTP/1.1" 200 821923
+"GET /analytics/arima-step-by-step/?step=3&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=3 HTTP/1.1" 200 496625
+C:\Users\Ace Gutierrez\Documents\System2025\medicine_ordering_system\medicine_ordering_system\analytics\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /analytics/arima-step-by-step/?step=3&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=3 HTTP/1.1" 200 496625
+"GET /analytics/arima-step-by-step/?step=1&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=1 HTTP/1.1" 200 495010
+"GET /analytics/arima-step-by-step/?step=2&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=2 HTTP/1.1" 200 929464
+"GET /analytics/arima-step-by-step/?step=3&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=3 HTTP/1.1" 200 496625
+"GET /analytics/arima-step-by-step/?step=3&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=3 HTTP/1.1" 200 496625
+"GET /analytics/arima-step-by-step/?step=4&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=4 HTTP/1.1" 200 821923
+"GET /analytics/arima-step-by-step/?step=3&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=3 HTTP/1.1" 200 496625
+"GET /analytics/arima-step-by-step/?step=5&medicine_id=4 HTTP/1.1" 200 31228
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=5 HTTP/1.1" 200 557554
+"GET /analytics/arima-step-by-step/?step=4&medicine_id=4 HTTP/1.1" 200 31228
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=4 HTTP/1.1" 200 821923
+"GET /analytics/arima-step-by-step/?step=4&medicine_id=4 HTTP/1.1" 200 31228
+Forbidden: /orders/api/cart/
+"GET /orders/api/cart/ HTTP/1.1" 403 67
+"GET /common/api/notifications/ HTTP/1.1" 200 21
+"GET /analytics/api/arima-step-analysis/?medicine_id=4&period_type=monthly&step=4 HTTP/1.1" 200 821923

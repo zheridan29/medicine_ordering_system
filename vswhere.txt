@@ -55,3 +55,4 @@ account type/role = admin
 password = admin123
 
 
+Can you create a much better approach in generating the historical data from 2020 to 2024 for the Amoxicillin to the database that affects all the necessary associated tables and avoids all the error we have encountered during data preparation.

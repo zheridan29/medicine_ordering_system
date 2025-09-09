@@ -630,6 +630,11 @@ class PharmacistOrderListView(LoginRequiredMixin, UserPassesTestMixin, ListView)
         if payment_filter:
             queryset = queryset.filter(payment_status=payment_filter)
         
+        # Filter by medicine
+        medicine_filter = self.request.GET.get('medicine')
+        if medicine_filter:
+            queryset = queryset.filter(items__medicine_id=medicine_filter).distinct()
+        
         # Search by order number or customer name
         search = self.request.GET.get('search')
         if search:
@@ -642,10 +647,14 @@ class PharmacistOrderListView(LoginRequiredMixin, UserPassesTestMixin, ListView)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        from inventory.models import Medicine
+        
         context['status_choices'] = Order.STATUS_CHOICES
         context['payment_status_choices'] = Order.PAYMENT_STATUS_CHOICES
+        context['medicines'] = Medicine.objects.filter(is_active=True).order_by('name')
         context['current_status'] = self.request.GET.get('status', '')
         context['current_payment_status'] = self.request.GET.get('payment_status', '')
+        context['current_medicine'] = self.request.GET.get('medicine', '')
         context['search_query'] = self.request.GET.get('search', '')
         return context
 

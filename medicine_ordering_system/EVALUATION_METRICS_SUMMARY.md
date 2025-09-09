@@ -89,7 +89,7 @@ This document provides a comprehensive overview of all evaluation metrics implem
 - **Location**: `/analytics/model-evaluation/`
 - **Display**: Detailed metrics table with all values
 - **Features**: Performance over time charts, model quality assessments
-- **Access**: Admin role only
+- **Access**: Admin role onlys
 
 ### Forecast-Only View
 - **Location**: `/analytics/forecast-only/`

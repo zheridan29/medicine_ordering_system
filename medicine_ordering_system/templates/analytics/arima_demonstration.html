@@ -1,0 +1,599 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ARIMA Demonstration - Analytics{% endblock %}
+
+{% block extra_css %}
+<style>
+    .analysis-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px 0;
+        text-align: center;
+    }
+    
+    .metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .metric-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    .chart-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .chart-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .loading-spinner {
+        text-align: center;
+        padding: 40px;
+    }
+    
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .analysis-section {
+        margin-bottom: 30px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #007bff;
+    }
+    
+    .status-badge {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+    
+    .status-stationary {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status-non-stationary {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .status-strong {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .status-weak {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .model-params {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .param-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .param-item:last-child {
+        border-bottom: none;
+    }
+    
+    .param-label {
+        font-weight: bold;
+        color: #495057;
+    }
+    
+    .param-value {
+        color: #007bff;
+        font-family: monospace;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-gray-800">
+                    <i class="fas fa-chart-line"></i> ARIMA Demonstration
+                </h1>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary" onclick="runAnalysis()">
+                        <i class="fas fa-play"></i> Run Analysis
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="refreshData()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="analysis-card">
+                <h5 class="card-title">Analysis Controls</h5>
+                <div class="form-group">
+                    <label for="medicineSelect">Select Medicine:</label>
+                    <select class="form-control" id="medicineSelect">
+                        {% for medicine in medicines %}
+                        <option value="{{ medicine.id }}" {% if medicine.id == selected_medicine.id %}selected{% endif %}>
+                            {{ medicine.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="periodSelect">Period Type:</label>
+                    <select class="form-control" id="periodSelect">
+                        <option value="monthly" {% if period_type == 'monthly' %}selected{% endif %}>Monthly</option>
+                        <option value="weekly" {% if period_type == 'weekly' %}selected{% endif %}>Weekly</option>
+                        <option value="daily" {% if period_type == 'daily' %}selected{% endif %}>Daily</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="analysis-card">
+                <h5 class="card-title">Current Selection</h5>
+                <div class="model-params">
+                    <div class="param-item">
+                        <span class="param-label">Medicine:</span>
+                        <span class="param-value" id="currentMedicine">{{ selected_medicine.name }}</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Period:</span>
+                        <span class="param-value" id="currentPeriod">{{ period_type|title }}</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Status:</span>
+                        <span class="param-value" id="analysisStatus">Ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Section -->
+    <div id="loadingSection" class="loading-spinner" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <p class="mt-3">Running ARIMA analysis...</p>
+    </div>
+
+    <!-- Analysis Results -->
+    <div id="analysisResults" style="display: none;">
+        
+        <!-- Data Information -->
+        <div class="analysis-section">
+            <h3 class="section-title">Data Information</h3>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value" id="totalPoints">-</div>
+                        <div class="metric-label">Data Points</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value" id="dataMean">-</div>
+                        <div class="metric-label">Mean Quantity</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value" id="dataStd">-</div>
+                        <div class="metric-label">Std Deviation</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value" id="dataRange">-</div>
+                        <div class="metric-label">Range</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stationarity Analysis -->
+        <div class="analysis-section">
+            <h3 class="section-title">Stationarity Analysis</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="analysis-card">
+                        <h5>Augmented Dickey-Fuller Test</h5>
+                        <div class="model-params">
+                            <div class="param-item">
+                                <span class="param-label">ADF Statistic:</span>
+                                <span class="param-value" id="adfStatistic">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">p-value:</span>
+                                <span class="param-value" id="adfPValue">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">Critical Value (5%):</span>
+                                <span class="param-value" id="adfCritical5">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="analysis-card">
+                        <h5>Stationarity Result</h5>
+                        <div class="text-center">
+                            <span id="stationarityStatus" class="status-badge">-</span>
+                            <p class="mt-3" id="stationarityExplanation">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seasonal Analysis -->
+        <div class="analysis-section">
+            <h3 class="section-title">Seasonal Analysis</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="analysis-card">
+                        <h5>Seasonal Components</h5>
+                        <div class="model-params">
+                            <div class="param-item">
+                                <span class="param-label">Trend Present:</span>
+                                <span class="param-value" id="trendPresent">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">Seasonal Present:</span>
+                                <span class="param-value" id="seasonalPresent">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">Residual Present:</span>
+                                <span class="param-value" id="residualPresent">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="analysis-card">
+                        <h5>Seasonal Strength</h5>
+                        <div class="text-center">
+                            <div class="metric-value" id="seasonalStrength">-</div>
+                            <div class="metric-label">Seasonal Strength</div>
+                            <span id="seasonalStatus" class="status-badge mt-2">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Information -->
+        <div class="analysis-section">
+            <h3 class="section-title">ARIMA Model Information</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="analysis-card">
+                        <h5>Model Parameters</h5>
+                        <div class="model-params">
+                            <div class="param-item">
+                                <span class="param-label">Non-seasonal ARIMA:</span>
+                                <span class="param-value" id="arimaOrder">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">Seasonal ARIMA:</span>
+                                <span class="param-value" id="seasonalOrder">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">Total Parameters:</span>
+                                <span class="param-value" id="totalParams">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="analysis-card">
+                        <h5>Model Evaluation</h5>
+                        <div class="model-params">
+                            <div class="param-item">
+                                <span class="param-label">AIC:</span>
+                                <span class="param-value" id="modelAIC">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">BIC:</span>
+                                <span class="param-value" id="modelBIC">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">RMSE:</span>
+                                <span class="param-value" id="modelRMSE">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">MAE:</span>
+                                <span class="param-value" id="modelMAE">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">MAPE:</span>
+                                <span class="param-value" id="modelMAPE">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualizations -->
+        <div class="analysis-section">
+            <h3 class="section-title">Visualizations</h3>
+            
+            <!-- Time Series Chart -->
+            <div class="chart-container">
+                <div class="chart-title">Time Series Data</div>
+                <img id="timeSeriesChart" src="" alt="Time Series Chart" class="img-fluid" style="display: none;">
+            </div>
+
+            <!-- Seasonal Decomposition Chart -->
+            <div class="chart-container">
+                <div class="chart-title">Seasonal Decomposition</div>
+                <img id="decompositionChart" src="" alt="Seasonal Decomposition Chart" class="img-fluid" style="display: none;">
+            </div>
+
+            <!-- Model Fit Chart -->
+            <div class="chart-container">
+                <div class="chart-title">Model Fit Comparison</div>
+                <img id="modelFitChart" src="" alt="Model Fit Chart" class="img-fluid" style="display: none;">
+            </div>
+
+            <!-- Forecast Chart -->
+            <div class="chart-container">
+                <div class="chart-title">12-Month Forecast</div>
+                <img id="forecastChart" src="" alt="Forecast Chart" class="img-fluid" style="display: none;">
+            </div>
+        </div>
+
+        <!-- Forecast Information -->
+        <div class="analysis-section">
+            <h3 class="section-title">Forecast Information</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="analysis-card">
+                        <h5>Forecast Statistics</h5>
+                        <div class="model-params">
+                            <div class="param-item">
+                                <span class="param-label">Mean Forecast:</span>
+                                <span class="param-value" id="forecastMean">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">Std Deviation:</span>
+                                <span class="param-value" id="forecastStd">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">Min Forecast:</span>
+                                <span class="param-value" id="forecastMin">-</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-label">Max Forecast:</span>
+                                <span class="param-value" id="forecastMax">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="analysis-card">
+                        <h5>Forecast Values</h5>
+                        <div id="forecastValues" class="model-params">
+                            <!-- Forecast values will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentAnalysisData = null;
+
+// Update current selection display
+function updateCurrentSelection() {
+    const medicineSelect = document.getElementById('medicineSelect');
+    const periodSelect = document.getElementById('periodSelect');
+    
+    document.getElementById('currentMedicine').textContent = medicineSelect.options[medicineSelect.selectedIndex].text;
+    document.getElementById('currentPeriod').textContent = periodSelect.options[periodSelect.selectedIndex].text;
+}
+
+// Run ARIMA analysis
+async function runAnalysis() {
+    const medicineId = document.getElementById('medicineSelect').value;
+    const periodType = document.getElementById('periodSelect').value;
+    
+    // Show loading
+    document.getElementById('loadingSection').style.display = 'block';
+    document.getElementById('analysisResults').style.display = 'none';
+    document.getElementById('analysisStatus').textContent = 'Running Analysis...';
+    
+    try {
+        const response = await fetch(`/analytics/api/arima-analysis/?medicine_id=${medicineId}&period_type=${periodType}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        currentAnalysisData = data;
+        displayAnalysisResults(data);
+        
+        // Hide loading and show results
+        document.getElementById('loadingSection').style.display = 'none';
+        document.getElementById('analysisResults').style.display = 'block';
+        document.getElementById('analysisStatus').textContent = 'Analysis Complete';
+        
+    } catch (error) {
+        console.error('Analysis failed:', error);
+        alert('Analysis failed: ' + error.message);
+        document.getElementById('loadingSection').style.display = 'none';
+        document.getElementById('analysisStatus').textContent = 'Analysis Failed';
+    }
+}
+
+// Display analysis results
+function displayAnalysisResults(data) {
+    // Data information
+    document.getElementById('totalPoints').textContent = data.data_info.total_points;
+    document.getElementById('dataMean').textContent = data.data_info.statistics.mean.toFixed(2);
+    document.getElementById('dataStd').textContent = data.data_info.statistics.std.toFixed(2);
+    document.getElementById('dataRange').textContent = 
+        `${data.data_info.statistics.min.toFixed(0)} - ${data.data_info.statistics.max.toFixed(0)}`;
+    
+    // Stationarity analysis
+    document.getElementById('adfStatistic').textContent = data.stationarity.adf_statistic.toFixed(6);
+    document.getElementById('adfPValue').textContent = data.stationarity.p_value.toFixed(6);
+    document.getElementById('adfCritical5').textContent = data.stationarity.critical_values['5%'].toFixed(6);
+    
+    const stationarityStatus = document.getElementById('stationarityStatus');
+    const stationarityExplanation = document.getElementById('stationarityExplanation');
+    
+    if (data.stationarity.is_stationary) {
+        stationarityStatus.textContent = 'STATIONARY';
+        stationarityStatus.className = 'status-badge status-stationary';
+        stationarityExplanation.textContent = 'Data is stationary (p-value ≤ 0.05)';
+    } else {
+        stationarityStatus.textContent = 'NON-STATIONARY';
+        stationarityStatus.className = 'status-badge status-non-stationary';
+        stationarityExplanation.textContent = 'Data is non-stationary (p-value > 0.05)';
+    }
+    
+    // Seasonal analysis
+    if (data.seasonal && !data.seasonal.error) {
+        document.getElementById('trendPresent').textContent = data.seasonal.trend_present ? 'Yes' : 'No';
+        document.getElementById('seasonalPresent').textContent = data.seasonal.seasonal_present ? 'Yes' : 'No';
+        document.getElementById('residualPresent').textContent = data.seasonal.residual_present ? 'Yes' : 'No';
+        document.getElementById('seasonalStrength').textContent = data.seasonal.seasonal_strength.toFixed(4);
+        
+        const seasonalStatus = document.getElementById('seasonalStatus');
+        if (data.seasonal.strong_seasonal) {
+            seasonalStatus.textContent = 'STRONG SEASONAL';
+            seasonalStatus.className = 'status-badge status-strong';
+        } else {
+            seasonalStatus.textContent = 'WEAK SEASONAL';
+            seasonalStatus.className = 'status-badge status-weak';
+        }
+    }
+    
+    // Model information
+    document.getElementById('arimaOrder').textContent = `ARIMA(${data.model.order[0]},${data.model.order[1]},${data.model.order[2]})`;
+    document.getElementById('seasonalOrder').textContent = `SARIMA(${data.model.seasonal_order[0]},${data.model.seasonal_order[1]},${data.model.seasonal_order[2]})[${data.model.seasonal_order[3]}]`;
+    document.getElementById('totalParams').textContent = data.model.order[0] + data.model.order[1] + data.model.order[2] + 
+                                                      data.model.seasonal_order[0] + data.model.seasonal_order[1] + data.model.seasonal_order[2];
+    
+    document.getElementById('modelAIC').textContent = data.model.aic.toFixed(3);
+    document.getElementById('modelBIC').textContent = data.model.bic.toFixed(3);
+    document.getElementById('modelRMSE').textContent = data.model.rmse.toFixed(3);
+    document.getElementById('modelMAE').textContent = data.model.mae.toFixed(3);
+    document.getElementById('modelMAPE').textContent = data.model.mape.toFixed(2) + '%';
+    
+    // Forecast information
+    document.getElementById('forecastMean').textContent = data.forecast.statistics.mean.toFixed(2);
+    document.getElementById('forecastStd').textContent = data.forecast.statistics.std.toFixed(2);
+    document.getElementById('forecastMin').textContent = data.forecast.statistics.min.toFixed(2);
+    document.getElementById('forecastMax').textContent = data.forecast.statistics.max.toFixed(2);
+    
+    // Display forecast values
+    const forecastValuesContainer = document.getElementById('forecastValues');
+    forecastValuesContainer.innerHTML = '';
+    data.forecast.values.forEach((value, index) => {
+        const div = document.createElement('div');
+        div.className = 'param-item';
+        div.innerHTML = `
+            <span class="param-label">Month ${index + 1}:</span>
+            <span class="param-value">${value.toFixed(2)}</span>
+        `;
+        forecastValuesContainer.appendChild(div);
+    });
+    
+    // Display charts
+    displayCharts(data.charts);
+}
+
+// Display charts
+function displayCharts(charts) {
+    if (charts.time_series) {
+        document.getElementById('timeSeriesChart').src = charts.time_series;
+        document.getElementById('timeSeriesChart').style.display = 'block';
+    }
+    
+    if (charts.decomposition) {
+        document.getElementById('decompositionChart').src = charts.decomposition;
+        document.getElementById('decompositionChart').style.display = 'block';
+    }
+    
+    if (charts.model_fit) {
+        document.getElementById('modelFitChart').src = charts.model_fit;
+        document.getElementById('modelFitChart').style.display = 'block';
+    }
+    
+    if (charts.forecast) {
+        document.getElementById('forecastChart').src = charts.forecast;
+        document.getElementById('forecastChart').style.display = 'block';
+    }
+}
+
+// Refresh data
+function refreshData() {
+    updateCurrentSelection();
+    if (currentAnalysisData) {
+        runAnalysis();
+    }
+}
+
+// Event listeners
+document.getElementById('medicineSelect').addEventListener('change', updateCurrentSelection);
+document.getElementById('periodSelect').addEventListener('change', updateCurrentSelection);
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateCurrentSelection();
+});
+</script>
+{% endblock %}

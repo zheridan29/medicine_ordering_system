@@ -8,6 +8,8 @@ urlpatterns = [
     path('', views.AnalyticsDashboardView.as_view(), name='dashboard'),
     path('forecast-only/', views.ForecastOnlyView.as_view(), name='forecast_only'),
     path('model-evaluation/', views.ModelEvaluationView.as_view(), name='model_evaluation'),
+    path('arima-demonstration/', views.arima_demonstration_view, name='arima_demonstration'),
+    path('arima-step-by-step/', views.arima_step_by_step_view, name='arima_step_by_step'),
     
     # API endpoints
     path('api/forecast/generate/', api_views.generate_forecast, name='api_generate_forecast'),
@@ -22,4 +24,8 @@ urlpatterns = [
     path('api/model-evaluation/', api_views.get_model_evaluation_data, name='api_model_evaluation'),
     path('api/forecast/<int:forecast_id>/details/', api_views.get_forecast_details, name='api_forecast_details'),
     path('api/forecast/<int:forecast_id>/delete/', api_views.delete_forecast, name='api_delete_forecast'),
+    path('api/forecast/generate-on-demand/', api_views.generate_forecast_on_demand, name='api_generate_forecast_on_demand'),
+    path('api/forecast/best-auto/', api_views.get_best_forecast_auto, name='api_best_forecast_auto'),
+    path('api/arima-analysis/', views.arima_analysis_data, name='api_arima_analysis'),
+    path('api/arima-step-analysis/', views.arima_step_analysis_data, name='api_arima_step_analysis'),
 ]

@@ -24,7 +24,7 @@
         <div class="card">
             <div class="card-body">
                 <form method="get" class="row g-3">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="status" class="form-label">Status</label>
                         <select name="status" id="status" class="form-select">
                             <option value="">All Statuses</option>
@@ -35,7 +35,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="payment_status" class="form-label">Payment Status</label>
                         <select name="payment_status" id="payment_status" class="form-select">
                             <option value="">All Payment Statuses</option>
@@ -46,7 +46,18 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <label for="medicine" class="form-label">Medicine</label>
+                        <select name="medicine" id="medicine" class="form-select">
+                            <option value="">All Medicines</option>
+                            {% for medicine in medicines %}
+                            <option value="{{ medicine.id }}" {% if current_medicine == medicine.id|stringformat:"s" %}selected{% endif %}>
+                                {{ medicine.name }} ({{ medicine.strength }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
                         <label for="search" class="form-label">Search</label>
                         <input type="text" name="search" id="search" class="form-control" 
                                placeholder="Order number or customer name" value="{{ search_query }}">
@@ -78,6 +89,7 @@
                                     <th>Order #</th>
                                     <th>Customer</th>
                                     <th>Sales Rep</th>
+                                    <th>Medicines</th>
                                     <th>Status</th>
                                     <th>Payment</th>
                                     <th>Total</th>
@@ -105,6 +117,17 @@
                                         {% else %}
                                             <span class="text-muted">N/A</span>
                                         {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for item in order.items.all %}
+                                                <span class="badge bg-light text-dark border" title="{{ item.medicine.name }} ({{ item.medicine.strength }}) - Qty: {{ item.quantity }}">
+                                                    {{ item.medicine.name|truncatechars:15 }}
+                                                </span>
+                                            {% empty %}
+                                                <span class="text-muted">No items</span>
+                                            {% endfor %}
+                                        </div>
                                     </td>
                                     <td>
                                         <span class="badge bg-{% if order.status == 'pending' %}warning{% elif order.status == 'processing' %}info{% elif order.status == 'ready_for_pickup' %}success{% elif order.status == 'delivered' %}dark{% elif order.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
@@ -140,10 +163,10 @@
                         <ul class="pagination justify-content-center">
                             {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page=1{% if current_status %}&status={{ current_status }}{% endif %}{% if current_payment_status %}&payment_status={{ current_payment_status }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
+                                    <a class="page-link" href="?page=1{% if current_status %}&status={{ current_status }}{% endif %}{% if current_payment_status %}&payment_status={{ current_payment_status }}{% endif %}{% if current_medicine %}&medicine={{ current_medicine }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_payment_status %}&payment_status={{ current_payment_status }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_payment_status %}&payment_status={{ current_payment_status }}{% endif %}{% if current_medicine %}&medicine={{ current_medicine }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
                                 </li>
                             {% endif %}
                             
@@ -155,10 +178,10 @@
                             
                             {% if page_obj.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_payment_status %}&payment_status={{ current_payment_status }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_payment_status %}&payment_status={{ current_payment_status }}{% endif %}{% if current_medicine %}&medicine={{ current_medicine }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_payment_status %}&payment_status={{ current_payment_status }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_payment_status %}&payment_status={{ current_payment_status }}{% endif %}{% if current_medicine %}&medicine={{ current_medicine }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
                                 </li>
                             {% endif %}
                         </ul>
