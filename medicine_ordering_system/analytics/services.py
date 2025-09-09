@@ -7,6 +7,9 @@ import numpy as np
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 import logging
+from decimal import Decimal
+import time
+import sqlite3
 
 from pmdarima import auto_arima
 from statsmodels.tsa.stattools import acf, pacf
@@ -14,8 +17,9 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import warnings
 
-from django.db.models import Sum, Count, Q
+from django.db.models import Sum, Count, Q, F
 from django.utils import timezone
+from django.db import transaction, connection
 
 from .models import DemandForecast, InventoryOptimization, SalesTrend
 from inventory.models import Medicine
@@ -26,13 +30,40 @@ logger = logging.getLogger(__name__)
 warnings.filterwarnings('ignore')
 
 
+def retry_database_operation(max_retries=3, delay=1):
+    """
+    Decorator to retry database operations on lock errors
+    """
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for attempt in range(max_retries):
+                try:
+                    return func(*args, **kwargs)
+                except (sqlite3.OperationalError, sqlite3.DatabaseError) as e:
+                    if "database is locked" in str(e).lower() and attempt < max_retries - 1:
+                        logger.warning(f"Database locked on attempt {attempt + 1}, retrying in {delay} seconds...")
+                        time.sleep(delay)
+                        continue
+                    else:
+                        raise e
+                except Exception as e:
+                    raise e
+            return None
+        return wrapper
+    return decorator
+
+
 class ARIMAForecastingService:
     """
     Service class for ARIMA-based demand forecasting
     """
     
     def __init__(self):
-        self.min_data_points = 30  # Minimum data points required for forecasting
+        self.min_data_points = {
+            'daily': 30,
+            'weekly': 12,
+            'monthly': 6
+        }
         
     def prepare_sales_data(self, medicine_id: int, period_type: str = 'daily', 
                           start_date: Optional[datetime] = None, 
@@ -40,10 +71,20 @@ class ARIMAForecastingService:
         """
         Prepare sales data for ARIMA forecasting
         """
-        if not start_date:
-            start_date = timezone.now() - timedelta(days=365)
-        if not end_date:
-            end_date = timezone.now()
+        if not start_date or not end_date:
+            # If no date range specified, find the actual range of available data
+            order_items = OrderItem.objects.filter(
+                medicine_id=medicine_id,
+                order__status__in=['confirmed', 'processing', 'shipped', 'delivered']
+            ).order_by('order__created_at')
+            
+            if not order_items.exists():
+                raise ValueError(f"No sales data found for medicine {medicine_id}")
+            
+            if not start_date:
+                start_date = order_items.first().order.created_at
+            if not end_date:
+                end_date = order_items.last().order.created_at
             
         # Get sales data from OrderItems
         order_items = OrderItem.objects.filter(
@@ -52,34 +93,82 @@ class ARIMAForecastingService:
             order__status__in=['confirmed', 'processing', 'shipped', 'delivered']
         ).values('order__created_at', 'quantity').order_by('order__created_at')
         
-        if not order_items:
-            raise ValueError(f"No sales data found for medicine {medicine_id}")
+        if not order_items.exists():
+            # Debug: Try without date range filter
+            debug_items = OrderItem.objects.filter(
+                medicine_id=medicine_id,
+                order__status__in=['confirmed', 'processing', 'shipped', 'delivered']
+            ).values('order__created_at', 'quantity').order_by('order__created_at')
+            
+            if not debug_items.exists():
+                # Try with any status
+                any_status_items = OrderItem.objects.filter(
+                    medicine_id=medicine_id
+                ).values('order__created_at', 'quantity').order_by('order__created_at')
+                
+                if not any_status_items.exists():
+                    raise ValueError(f"No sales data found for medicine {medicine_id}")
+                else:
+                    # Use items with any status
+                    order_items = any_status_items
+                    logger.warning(f"Using order items with any status for medicine {medicine_id}")
+            else:
+                # Use items without date range
+                order_items = debug_items
+                logger.warning(f"Using order items without date range for medicine {medicine_id}")
         
         # Convert to DataFrame
         df = pd.DataFrame(list(order_items))
         df['order__created_at'] = pd.to_datetime(df['order__created_at'])
         
-        # Group by period
+        # Debug logging
+        logger.info(f"Prepared {len(df)} records for {period_type} forecasting")
+        logger.info(f"Date range: {df['order__created_at'].min()} to {df['order__created_at'].max()}")
+        
+        # Group by period and aggregate quantities
         if period_type == 'daily':
-            df = df.groupby(df['order__created_at'].dt.date)['quantity'].sum().reset_index()
-            df.columns = ['date', 'quantity']
+            grouped = df.groupby(df['order__created_at'].dt.to_period('D'))['quantity'].sum()
         elif period_type == 'weekly':
-            df['week'] = df['order__created_at'].dt.to_period('W')
-            df = df.groupby('week')['quantity'].sum().reset_index()
-            df['date'] = df['week'].dt.start_time.dt.date
-            df = df[['date', 'quantity']]
+            grouped = df.groupby(df['order__created_at'].dt.to_period('W'))['quantity'].sum()
         elif period_type == 'monthly':
-            df['month'] = df['order__created_at'].dt.to_period('M')
-            df = df.groupby('month')['quantity'].sum().reset_index()
-            df['date'] = df['month'].dt.start_time.dt.date
-            df = df[['date', 'quantity']]
+            grouped = df.groupby(df['order__created_at'].dt.to_period('M'))['quantity'].sum()
         else:
             raise ValueError("period_type must be 'daily', 'weekly', or 'monthly'")
+
+        # Debug logging
+        logger.info(f"Grouped data for {period_type}: {len(grouped)} periods")
+        logger.info(f"Non-zero periods: {(grouped > 0).sum()}")
+        logger.info(f"Sample values: {grouped.head()}")
+
+        # Convert period index to datetime and create DataFrame
+        df_result = pd.DataFrame({
+            'date': grouped.index.to_timestamp(),
+            'quantity': grouped.values
+        })
         
-        # Fill missing dates with 0
-        date_range = pd.date_range(start=df['date'].min(), end=df['date'].max(), freq='D' if period_type == 'daily' else 'W' if period_type == 'weekly' else 'M')
-        df = df.set_index('date').reindex(date_range.date, fill_value=0).reset_index()
-        df.columns = ['date', 'quantity']
+        # Debug logging
+        logger.info(f"DataFrame result shape: {df_result.shape}")
+        logger.info(f"DataFrame non-zero: {(df_result['quantity'] > 0).sum()}")
+        
+        # For now, just return the grouped data without reindexing
+        # This will preserve the actual aggregated values
+        try:
+            # Ensure quantity is numeric and non-negative
+            df_result['quantity'] = pd.to_numeric(df_result['quantity'], errors='coerce').fillna(0)
+            df_result['quantity'] = df_result['quantity'].clip(lower=0)
+            
+            # Final debug logging
+            logger.info(f"Final DataFrame - Non-zero periods: {(df_result['quantity'] > 0).sum()}")
+            logger.info(f"Final DataFrame - Sample values: {df_result['quantity'].head()}")
+            
+        except Exception as e:
+            logger.error(f"Error processing data for {period_type}: {e}")
+            logger.error(f"DataFrame columns: {df_result.columns.tolist()}")
+            logger.error(f"DataFrame dtypes: {df_result.dtypes}")
+            raise ValueError(f"Error processing {period_type} data: {e}")
+        
+        # Use the result DataFrame
+        df = df_result
         
         return df
     
@@ -88,9 +177,15 @@ class ARIMAForecastingService:
         Find optimal ARIMA parameters using auto_arima
         """
         try:
+            # Clean data - remove NaN and infinite values
+            clean_data = data.dropna()
+            if len(clean_data) == 0:
+                logger.warning("No valid data points after cleaning, using fallback parameters")
+                return 1, 1, 1
+            
             # Use auto_arima to find best parameters
             model = auto_arima(
-                data,
+                clean_data,
                 start_p=0, start_q=0,
                 max_p=5, max_q=5,
                 seasonal=False,
@@ -100,7 +195,18 @@ class ARIMAForecastingService:
                 trace=False
             )
             
-            return model.order[0], model.order[1], model.order[2]  # p, d, q
+            # Safely extract parameters and handle NaN values
+            p = int(model.order[0]) if not pd.isna(model.order[0]) else 1
+            d = int(model.order[1]) if not pd.isna(model.order[1]) else 1
+            q = int(model.order[2]) if not pd.isna(model.order[2]) else 1
+            
+            # Ensure parameters are non-negative
+            p = max(0, p)
+            d = max(0, d)
+            q = max(0, q)
+            
+            logger.info(f"ARIMA parameters found: p={p}, d={d}, q={q}")
+            return p, d, q
             
         except Exception as e:
             logger.error(f"Error finding ARIMA parameters: {e}")
@@ -148,6 +254,7 @@ class ARIMAForecastingService:
             logger.error(f"Error calculating ACF/PACF: {e}")
             return {'acf': [], 'pacf': []}
     
+    @retry_database_operation(max_retries=3, delay=1)
     def generate_forecast(self, medicine_id: int, forecast_period: str = 'weekly', 
                          forecast_horizon: int = 4) -> DemandForecast:
         """
@@ -159,11 +266,33 @@ class ARIMAForecastingService:
             # Prepare sales data
             sales_data = self.prepare_sales_data(medicine_id, forecast_period)
             
-            if len(sales_data) < self.min_data_points:
-                raise ValueError(f"Insufficient data points. Need at least {self.min_data_points}, got {len(sales_data)}")
+            min_points = self.min_data_points.get(forecast_period, 30)
+            if len(sales_data) < min_points:
+                raise ValueError(f"Insufficient {forecast_period} data points. Need at least {min_points}, got {len(sales_data)}")
             
             # Prepare time series data
             ts_data = sales_data.set_index('date')['quantity']
+            
+            # Clean data - remove NaN and infinite values
+            ts_data = ts_data.dropna()
+            if len(ts_data) == 0:
+                raise ValueError("No valid data points after cleaning NaN values")
+            
+            # Ensure all values are finite
+            ts_data = ts_data[np.isfinite(ts_data)]
+            if len(ts_data) == 0:
+                raise ValueError("No finite data points available for forecasting")
+            
+            # Sanitize input data - handle outliers and negative values
+            ts_data = ts_data.clip(lower=0)  # Remove negative values
+            # Cap extreme outliers at 3 standard deviations
+            mean_val = ts_data.mean()
+            std_val = ts_data.std()
+            if std_val > 0:
+                upper_bound = mean_val + 3 * std_val
+                ts_data = ts_data.clip(upper=upper_bound)
+            
+            logger.info(f"Cleaned time series data: {len(ts_data)} points, range: {ts_data.min():.2f} to {ts_data.max():.2f}")
             
             # Find optimal ARIMA parameters
             p, d, q = self.find_optimal_arima_params(ts_data)
@@ -177,11 +306,18 @@ class ARIMAForecastingService:
             forecast_result = fitted_model.forecast(steps=forecast_horizon)
             forecast_values = forecast_result.values.tolist()
             
-            # Calculate confidence intervals
-            conf_int = fitted_model.get_forecast(steps=forecast_horizon).conf_int()
+            # Handle NaN values in forecast
+            forecast_values = [0.0 if pd.isna(val) or not np.isfinite(val) else float(val) for val in forecast_values]
+            
+            # Calculate confidence intervals with safer handling
+            forecast_object = fitted_model.get_forecast(steps=forecast_horizon)
+            conf_int = forecast_object.conf_int()
+            lower_bounds = conf_int.iloc[:, 0].astype(float).fillna(0).tolist()
+            upper_bounds = conf_int.iloc[:, 1].astype(float).fillna(0).tolist()
+            
             confidence_intervals = {
-                'lower': conf_int.iloc[:, 0].values.tolist(),
-                'upper': conf_int.iloc[:, 1].values.tolist()
+                'lower': lower_bounds,
+                'upper': upper_bounds
             }
             
             # Calculate model metrics using in-sample predictions
@@ -193,25 +329,26 @@ class ARIMAForecastingService:
             # Calculate ACF and PACF
             acf_pacf = self.calculate_acf_pacf(ts_data)
             
-            # Create DemandForecast object
-            forecast = DemandForecast.objects.create(
-                medicine=medicine,
-                forecast_period=forecast_period,
-                forecast_horizon=forecast_horizon,
-                arima_p=p,
-                arima_d=d,
-                arima_q=q,
-                aic=float(fitted_model.aic),
-                bic=float(fitted_model.bic),
-                rmse=metrics['rmse'],
-                mae=metrics['mae'],
-                mape=metrics['mape'],
-                forecasted_demand=forecast_values,
-                confidence_intervals=confidence_intervals,
-                training_data_start=sales_data['date'].min(),
-                training_data_end=sales_data['date'].max(),
-                training_data_points=len(sales_data)
-            )
+            # Create DemandForecast object within a transaction
+            with transaction.atomic():
+                forecast = DemandForecast.objects.create(
+                    medicine=medicine,
+                    forecast_period=forecast_period,
+                    forecast_horizon=forecast_horizon,
+                    arima_p=p,
+                    arima_d=d,
+                    arima_q=q,
+                    aic=float(fitted_model.aic),
+                    bic=float(fitted_model.bic),
+                    rmse=metrics['rmse'],
+                    mae=metrics['mae'],
+                    mape=metrics['mape'],
+                    forecasted_demand=forecast_values,
+                    confidence_intervals=confidence_intervals,
+                    training_data_start=sales_data['date'].min(),
+                    training_data_end=sales_data['date'].max(),
+                    training_data_points=len(sales_data)
+                )
             
             logger.info(f"Successfully generated forecast for {medicine.name}")
             return forecast
@@ -237,40 +374,79 @@ class ARIMAForecastingService:
             # Calculate demand standard deviation
             demand_std = np.std(forecasted_demand)
             
+            # Handle NaN and zero values
+            if np.isnan(avg_demand_lead_time) or avg_demand_lead_time <= 0:
+                avg_demand_lead_time = 1.0  # Minimum demand
+            if np.isnan(demand_std) or demand_std <= 0:
+                demand_std = 1.0  # Minimum standard deviation
+            
             # Calculate safety stock using service level
             from scipy import stats
             z_score = stats.norm.ppf(service_level / 100)
             safety_stock = z_score * demand_std * np.sqrt(lead_time_days / 7)
             
+            # Ensure safety stock is not NaN
+            if np.isnan(safety_stock) or safety_stock < 0:
+                safety_stock = 1.0
+            
             # Calculate reorder point
-            reorder_point = int(avg_demand_lead_time + safety_stock)
+            reorder_point = int(max(1, avg_demand_lead_time + safety_stock))
             
             # Calculate optimal order quantity using EOQ model
             # EOQ = sqrt(2 * D * S / H)
             # D = annual demand, S = ordering cost, H = holding cost per unit per year
             
             annual_demand = np.sum(forecasted_demand) * (52 / len(forecasted_demand))  # annualize
-            ordering_cost = 50.0  # assumed ordering cost
-            holding_cost_per_unit = forecast.medicine.unit_price * (holding_cost_percentage / 100)
             
-            eoq = np.sqrt(2 * annual_demand * ordering_cost / holding_cost_per_unit)
-            optimal_order_quantity = int(eoq)
+            # Dynamic ordering cost based on medicine category
+            category = forecast.medicine.category.name.lower()
+            if 'prescription' in category or 'controlled' in category:
+                ordering_cost = Decimal('100.0')  # Higher cost for controlled substances
+            elif 'vitamin' in category or 'supplement' in category:
+                ordering_cost = Decimal('25.0')  # Lower cost for supplements
+            elif 'emergency' in category or 'critical' in category:
+                ordering_cost = Decimal('75.0')  # Medium-high cost for emergency meds
+            else:
+                ordering_cost = Decimal('50.0')  # Default cost
+            
+            holding_cost_per_unit = forecast.medicine.unit_price * Decimal(str(holding_cost_percentage / 100))
+            
+            # Ensure annual demand is positive
+            if annual_demand <= 0 or np.isnan(annual_demand):
+                annual_demand = 1.0
+            
+            eoq = np.sqrt(2 * annual_demand * float(ordering_cost) / float(holding_cost_per_unit))
+            
+            # Handle NaN or invalid EOQ
+            if np.isnan(eoq) or eoq <= 0:
+                optimal_order_quantity = 10  # Default minimum order
+            else:
+                optimal_order_quantity = int(max(1, eoq))
             
             # Calculate maximum stock level
             optimal_maximum_stock = reorder_point + optimal_order_quantity
             
-            # Calculate expected costs
-            expected_holding_cost = (optimal_order_quantity / 2) * holding_cost_per_unit
-            expected_stockout_cost = (1 - service_level / 100) * annual_demand * forecast.medicine.unit_price * 0.1  # 10% of unit price as stockout cost
+            # Calculate expected costs with NaN handling
+            expected_holding_cost = Decimal(str(optimal_order_quantity / 2)) * holding_cost_per_unit
+            
+            stockout_probability = (1 - service_level / 100)
+            expected_stockout_cost = Decimal(str(stockout_probability * annual_demand)) * forecast.medicine.unit_price * Decimal('0.1')  # 10% of unit price as stockout cost
+            
+            # Ensure costs are not NaN
+            if expected_holding_cost.is_nan():
+                expected_holding_cost = Decimal('0.0')
+            if expected_stockout_cost.is_nan():
+                expected_stockout_cost = Decimal('0.0')
+                
             total_expected_cost = expected_holding_cost + expected_stockout_cost
             
             # Create InventoryOptimization object
             optimization = InventoryOptimization.objects.create(
                 medicine=forecast.medicine,
                 demand_forecast=forecast,
-                service_level=service_level,
+                service_level=Decimal(str(service_level)),
                 lead_time_days=lead_time_days,
-                holding_cost_percentage=holding_cost_percentage,
+                holding_cost_percentage=Decimal(str(holding_cost_percentage)),
                 optimal_reorder_point=int(reorder_point),
                 optimal_order_quantity=optimal_order_quantity,
                 optimal_maximum_stock=optimal_maximum_stock,
@@ -413,7 +589,7 @@ class SupplyChainOptimizer:
         
         # Get all medicines with low stock
         low_stock_medicines = Medicine.objects.filter(
-            current_stock__lte=models.F('reorder_point'),
+            current_stock__lte=F('reorder_point'),
             is_active=True
         )
         

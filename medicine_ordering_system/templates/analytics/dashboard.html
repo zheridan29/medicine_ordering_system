@@ -40,10 +40,25 @@
     .alert-card {
         border-left: 4px solid #dc3545;
     }
+    
+    .btn-group .btn {
+        border-radius: 0.375rem;
+        margin-right: 2px;
+    }
+    
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+    
+    .btn-group .btn.active {
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
 </style>
 {% endblock %}
 
 {% block content %}
+<!-- CSRF Token for AJAX requests -->
+{% csrf_token %}
 <div class="row">
     <div class="col-12">
         <h1 class="mb-4">
@@ -150,9 +165,14 @@
                         <button class="btn btn-warning me-2" onclick="viewForecastHistory()">
                             <i class="fas fa-history me-1"></i>View History
                         </button>
-                        <a href="{% url 'analytics:model_evaluation' %}" class="btn btn-info">
+                        <a href="{% url 'analytics:model_evaluation' %}" class="btn btn-info me-2">
                             <i class="fas fa-chart-bar me-1"></i>Model Evaluation
                         </a>
+                        {% if user.is_admin %}
+                        <a href="{% url 'analytics:forecast_only' %}" class="btn btn-success">
+                            <i class="fas fa-chart-line me-1"></i>Forecast View
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -165,11 +185,33 @@
     <!-- Demand Forecast Chart -->
     <div class="col-lg-8">
         <div class="chart-container">
-            <h5 class="mb-3">
-                <i class="fas fa-chart-area me-2"></i><span id="chartTitle">Demand Forecast Trends</span>
-            </h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-area me-2"></i><span id="chartTitle">Demand Forecast Trends</span>
+                </h5>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="zoomInBtn" title="Zoom In">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="zoomOutBtn" title="Zoom Out">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="resetZoomBtn" title="Reset Zoom">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-info" id="panBtn" title="Pan Mode (Hold Ctrl + Drag)">
+                        <i class="fas fa-hand-paper"></i>
+                    </button>
+                </div>
+            </div>
             <div class="chart-container" style="height: 400px;">
                 <canvas id="demandForecastChart"></canvas>
+            </div>
+            <div class="mt-2">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    <strong>Zoom:</strong> Mouse wheel or drag to zoom • <strong>Pan:</strong> Hold Ctrl + drag • <strong>Reset:</strong> Click reset button
+                </small>
             </div>
         </div>
     </div>
@@ -192,10 +234,13 @@
     <!-- Recent Forecasts -->
     <div class="col-lg-6">
         <div class="card forecast-card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">
                     <i class="fas fa-clock me-2"></i>Recent Forecasts
                 </h5>
+                <button class="btn btn-sm btn-outline-primary" onclick="refreshRecentForecasts()" title="Refresh Forecasts">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -206,6 +251,7 @@
                                 <th>Period</th>
                                 <th>Accuracy</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="recent-forecasts-table">
@@ -223,10 +269,20 @@
                                         {% if forecast.is_active %}Active{% else %}Inactive{% endif %}
                                     </span>
                                 </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewForecastDetails({{ forecast.id }})" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteForecast({{ forecast.id }}, '{{ forecast.medicine.name }}')" title="Delete Forecast">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="4" class="text-center text-muted">No forecasts available</td>
+                                <td colspan="5" class="text-center text-muted">No forecasts available</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -378,7 +434,12 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 <script>
+// Register Chart.js zoom plugin
+Chart.register(ChartZoom);
+
 $(document).ready(function() {
     loadDashboardData();
     loadDemandForecastChart();
@@ -386,6 +447,7 @@ $(document).ready(function() {
     loadMedicines();
     loadAnalyticsMedicines();
     loadExistingForecasts();
+    setupZoomControls();
     
     // Add event listener for period change to update horizon limits
     $('#forecastPeriod').on('change', updateHorizonLimits);
@@ -562,28 +624,60 @@ function loadGeneralAnalytics() {
 }
 
 function updateDemandForecastChart(data) {
+    console.log('Updating chart with data:', data);
+    
+    // Validate data structure
+    if (!data) {
+        console.error('No data provided to updateDemandForecastChart');
+        return;
+    }
+    
     // Destroy existing chart
     if (window.demandForecastChart) {
         window.demandForecastChart.destroy();
     }
     
     const ctx = document.getElementById('demandForecastChart').getContext('2d');
+    
+    // Prepare data arrays with proper null handling for forecast
+    const historicalData = data.historical ? data.historical.values : [];
+    const forecastData = data.forecast ? data.forecast.values : [];
+    
+    console.log('Historical data length:', historicalData.length);
+    console.log('Forecast data length:', forecastData.length);
+    
+    // Create combined data array with nulls for forecast periods in historical data
+    const combinedHistoricalData = [...historicalData];
+    const combinedForecastData = [...Array(historicalData.length).fill(null), ...forecastData];
+    
+    // Use provided labels or fallback to generic ones
+    const labels = data.labels || data.forecast?.labels || ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'];
+    
+    console.log('Labels length:', labels.length);
+    console.log('Combined historical data length:', combinedHistoricalData.length);
+    console.log('Combined forecast data length:', combinedForecastData.length);
+    
     window.demandForecastChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: data.labels || ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+            labels: labels,
             datasets: [{
                 label: 'Historical Demand',
-                data: data.historical || [120, 135, 150, 140, 160, 155, 170, 165],
+                data: combinedHistoricalData,
                 borderColor: 'rgb(75, 192, 192)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                tension: 0.1
+                tension: 0.1,
+                pointRadius: 4,
+                pointHoverRadius: 6
             }, {
                 label: 'Forecasted Demand',
-                data: data.forecasted || [null, null, null, null, null, null, 175, 180],
+                data: combinedForecastData,
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                tension: 0.1
+                tension: 0.1,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                borderDash: [5, 5]  // Dashed line for forecast
             }]
         },
         options: {
@@ -593,9 +687,65 @@ function updateDemandForecastChart(data) {
                 title: {
                     display: true,
                     text: 'Medicine Demand Forecast'
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            return labels[tooltipItems[0].dataIndex] || 'Unknown Period';
+                        },
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y.toFixed(2) + ' units';
+                            }
+                            return label;
+                        }
+                    }
+                },
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true,
+                            speed: 0.1
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'x',
+                        drag: {
+                            enabled: true,
+                            backgroundColor: 'rgba(54, 162, 235, 0.3)',
+                            borderColor: 'rgba(54, 162, 235, 0.8)',
+                            borderWidth: 1
+                        }
+                    },
+                    pan: {
+                        enabled: true,
+                        mode: 'x',
+                        modifierKey: 'ctrl'
+                    }
                 }
             },
             scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time Period'
+                    },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 0
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     title: {
@@ -603,7 +753,48 @@ function updateDemandForecastChart(data) {
                         text: 'Quantity'
                     }
                 }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
             }
+        }
+    });
+}
+
+// Zoom control functions
+function setupZoomControls() {
+    $('#zoomInBtn').on('click', function() {
+        if (window.demandForecastChart) {
+            window.demandForecastChart.zoom(1.1);
+        }
+    });
+    
+    $('#zoomOutBtn').on('click', function() {
+        if (window.demandForecastChart) {
+            window.demandForecastChart.zoom(0.9);
+        }
+    });
+    
+    $('#resetZoomBtn').on('click', function() {
+        if (window.demandForecastChart) {
+            window.demandForecastChart.resetZoom();
+        }
+    });
+    
+    $('#panBtn').on('click', function() {
+        if (window.demandForecastChart) {
+            // Toggle pan mode
+            const isPanMode = $(this).hasClass('active');
+            if (isPanMode) {
+                $(this).removeClass('active').removeClass('btn-info').addClass('btn-outline-info');
+                window.demandForecastChart.options.plugins.zoom.pan.enabled = false;
+            } else {
+                $(this).addClass('active').removeClass('btn-outline-info').addClass('btn-info');
+                window.demandForecastChart.options.plugins.zoom.pan.enabled = true;
+            }
+            window.demandForecastChart.update();
         }
     });
 }
@@ -618,39 +809,232 @@ function updateInventoryOptimization(data) {
     }
 }
 
+
+function showAlert(type, message) {
+    const alertClass = type === 'success' ? 'alert-success' : 
+                     type === 'warning' ? 'alert-warning' : 'alert-danger';
+    
+    const alertHtml = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    // Remove existing alerts
+    $('.alert').remove();
+    
+    // Add new alert
+    $('.row').first().before(alertHtml);
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+        $('.alert').fadeOut();
+    }, 5000);
+}
+
+function deleteForecast(forecastId, medicineName) {
+    // Show confirmation dialog
+    if (confirm(`Are you sure you want to delete the forecast for ${medicineName}?\n\nThis action cannot be undone.`)) {
+        // Show loading state
+        const deleteBtn = event.target.closest('button');
+        const originalContent = deleteBtn.innerHTML;
+        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        deleteBtn.disabled = true;
+        
+        console.log(`Attempting to delete forecast ID: ${forecastId}`);
+        
+        // Get CSRF token
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val() || 
+                         $('meta[name=csrf-token]').attr('content') ||
+                         $('input[name=csrfmiddlewaretoken]').val();
+        
+        console.log('CSRF Token:', csrfToken);
+        
+        $.ajax({
+            url: `/analytics/api/forecast/${forecastId}/delete/`,
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            success: function(response) {
+                console.log('Delete successful:', response);
+                showAlert('success', response.message);
+                
+                // Remove the row from the table with animation
+                const row = deleteBtn.closest('tr');
+                console.log('Removing row:', row);
+                
+                row.fadeOut(300, function() {
+                    $(this).remove();
+                    console.log('Row removed from table');
+                    
+                    // Check if table is empty and add empty message if needed
+                    const remainingRows = $('#recent-forecasts-table tr').length;
+                    console.log('Remaining rows:', remainingRows);
+                    
+                    if (remainingRows === 0) {
+                        $('#recent-forecasts-table').append(`
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No forecasts available</td>
+                            </tr>
+                        `);
+                    }
+                });
+                
+                // Refresh the existing forecasts dropdown
+                loadExistingForecasts();
+                
+                // Reset button state
+                deleteBtn.innerHTML = originalContent;
+                deleteBtn.disabled = false;
+            },
+            error: function(xhr) {
+                console.error('Delete failed:', xhr);
+                const response = xhr.responseJSON;
+                const errorMessage = response?.error || `HTTP ${xhr.status}: ${xhr.statusText}`;
+                showAlert('error', 'Error deleting forecast: ' + errorMessage);
+                
+                // Reset button state
+                deleteBtn.innerHTML = originalContent;
+                deleteBtn.disabled = false;
+            }
+        });
+    }
+}
+
+function viewForecastDetails(forecastId) {
+    // Show forecast details modal or navigate to details page
+    showAlert('info', `Viewing details for forecast ID: ${forecastId}`);
+    // TODO: Implement detailed forecast view
+}
+
+function refreshRecentForecasts() {
+    // Refresh the recent forecasts table without page reload
+    $.ajax({
+        url: '/analytics/api/forecasts/',
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
+            'Content-Type': 'application/json'
+        },
+        success: function(response) {
+            const forecasts = response.forecasts || [];
+            const tableBody = $('#recent-forecasts-table');
+            
+            // Clear existing rows
+            tableBody.empty();
+            
+            if (forecasts.length === 0) {
+                tableBody.append(`
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No forecasts available</td>
+                    </tr>
+                `);
+            } else {
+                // Add forecast rows
+                forecasts.slice(0, 10).forEach(forecast => { // Show only recent 10
+                    const accuracyClass = forecast.accuracy < 20 ? 'success' : 
+                                        forecast.accuracy < 40 ? 'warning' : 'danger';
+                    
+                    tableBody.append(`
+                        <tr>
+                            <td>${forecast.medicine_name}</td>
+                            <td>${forecast.forecast_period.charAt(0).toUpperCase() + forecast.forecast_period.slice(1)}</td>
+                            <td>
+                                <span class="badge bg-${accuracyClass}">
+                                    ${forecast.accuracy.toFixed(1)}%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-success">Active</span>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewForecastDetails(${forecast.id})" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteForecast(${forecast.id}, '${forecast.medicine_name}')" title="Delete Forecast">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error('Error refreshing forecasts:', xhr.responseText);
+        }
+    });
+}
+
 function generateForecast() {
     const medicineId = $('#medicineSelect').val();
     const forecastPeriod = $('#forecastPeriod').val();
-    const forecastHorizon = $('#forecastHorizon').val();
+    const forecastHorizon = parseInt($('#forecastHorizon').val());
     
     if (!medicineId) {
         showAlert('warning', 'Please select a medicine');
         return;
     }
     
+    // Show loading state
+    $('#generateForecastBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Generating...');
+    
     $.ajax({
         url: '/analytics/api/forecast/generate/',
         method: 'POST',
-        data: {
-            'medicine_id': medicineId,
-            'forecast_period': forecastPeriod,
-            'forecast_horizon': forecastHorizon,
-            'csrfmiddlewaretoken': $('#forecastForm [name=csrfmiddlewaretoken]').val()
+        headers: {
+            'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
+            'Content-Type': 'application/json'
         },
+        data: JSON.stringify({
+            medicine_id: medicineId,
+            forecast_period: forecastPeriod,
+            forecast_horizon: forecastHorizon
+        }),
         success: function(response) {
-            showAlert('success', 'Forecast generated successfully!');
+            // Update chart with new data
+            const chartData = {
+                labels: response.labels,
+                historical: response.historical_data,
+                forecast: {
+                    values: response.forecasted_demand,
+                    labels: response.forecast_labels
+                }
+            };
+            
+            updateDemandForecastChart(chartData);
+            
+            // Update chart title
+            $('#chartTitle').text(`Analytics for ${response.medicine_name}`);
+            
+            // Show success message
+            showAlert('success', `Forecast generated successfully for ${response.medicine_name}`);
+            
+            // Refresh the existing forecasts dropdown
+            loadExistingForecasts();
+            
+            // Refresh the recent forecasts table
+            refreshRecentForecasts();
+            
+            // Close modal
             $('#forecastModal').modal('hide');
-            location.reload();
         },
         error: function(xhr) {
             const response = xhr.responseJSON;
-            
             if (response && response.error === 'insufficient_data') {
-                showInsufficientDataAlert(response);
+                showAlert('warning', response.message);
             } else {
-                const error = response?.error || 'Failed to generate forecast';
-                showAlert('danger', error);
+                showAlert('error', 'Error generating forecast: ' + (response?.error || 'Unknown error'));
             }
+        },
+        complete: function() {
+            // Reset button state
+            $('#generateForecastBtn').prop('disabled', false).html('<i class="fas fa-plus me-1"></i>Generate Forecast');
         }
     });
 }
@@ -731,10 +1115,23 @@ function extendForecast() {
         },
         success: function(response) {
             showAlert('success', `Forecast extended successfully! New horizon: ${response.new_horizon} periods`);
+            
+            // Update the chart with extended forecast data
+            if (response.forecast_data) {
+                console.log('Extended forecast data:', response.forecast_data);
+                
+                // Use the data directly as it already has the correct structure
+                updateDemandForecastChart(response.forecast_data);
+                
+                // Update chart title
+                $('#chartTitle').text(`Analytics for ${response.forecast_data.medicine_name}`);
+            }
+            
             loadExistingForecasts(); // Refresh the forecast list
-            refreshForecasts(); // Refresh the dashboard
+            refreshRecentForecasts(); // Refresh the recent forecasts table
         },
         error: function(xhr) {
+            console.error('Extend forecast error:', xhr);
             const response = xhr.responseJSON;
             if (response && response.error === 'insufficient_data') {
                 showInsufficientDataAlert(response);
@@ -742,6 +1139,9 @@ function extendForecast() {
                 const error = response?.error || 'Failed to extend forecast';
                 showAlert('danger', error);
             }
+        },
+        complete: function() {
+            console.log('Extend forecast request completed');
         }
     });
 }
